@@ -1,6 +1,7 @@
 /* Item component to display items in a shopping list in a table */
 import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import TableHeading from './tableHeading';
 import Delete from "./delete";
 
@@ -19,6 +20,10 @@ class ItemRow extends Component {
     }
 }
 
+ItemRow.propTypes = {
+    item: PropTypes.object.isRequired
+}
+
 class ItemTable extends Component {
     render(){
         const rows = this.props.items.map((item) => {
@@ -31,15 +36,21 @@ class ItemTable extends Component {
         return (
         <Table>
             <thead>
-                <TableHeading heading="Name"/>
-                <TableHeading heading="Quantity"/>
-                <TableHeading heading="From"/>
-                <TableHeading heading="Status"/>
+                <tr>
+                    <TableHeading heading="Name"/>
+                    <TableHeading heading="Quantity"/>
+                    <TableHeading heading="From"/>
+                    <TableHeading heading="Status"/>
+                </tr>
             </thead>
             <tbody>{rows}</tbody>
         </Table>
             );
     }
+}
+
+ItemTable.propTypes = {
+    items: PropTypes.array.isRequired
 }
 
 export default ItemTable;

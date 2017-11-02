@@ -1,5 +1,6 @@
 /* shopping list component to display shopping lists in a table */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import TableHeading from './tableHeading';
 import { Table } from 'react-bootstrap';
 import Delete from "./delete";
@@ -17,6 +18,9 @@ class ShoppingListRow extends Component {
         );
     }
 }
+ShoppingListRow.propTypes = {
+    shoppingList: PropTypes.object.isRequired
+}
 
 class ShoppingListTable extends Component {
     render(){
@@ -30,13 +34,19 @@ class ShoppingListTable extends Component {
         return (
         <Table> 
             <thead>
-                <TableHeading heading="Name"/>
-                <TableHeading heading="Due date"/>
+                <tr>
+                    <TableHeading heading="Name"/>
+                    <TableHeading heading="Due date"/>
+                </tr>
             </thead>
             <tbody>{rows}</tbody>
         </Table>
             );
     }
+}
+
+ShoppingListTable.propTypes = {
+    shoppingLists: PropTypes.array.isRequired
 }
 
 export default ShoppingListTable;

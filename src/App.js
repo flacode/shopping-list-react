@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import ShoppingListTable from './shoppingList';
-import ItemTable from './shoppingListItems';
-import Registration from './register';
-import Login from './login';
-import NewShoppingList from './createShoppingList';
+//import ShoppingListTable from './shoppingList';
+//import ItemTable from './shoppingListItems';
+import Registration from './Register';
+//import Login from './Login';
+//import NewShoppingList from './createShoppingList';
 import './App.css';
 
 class App extends Component {
@@ -24,7 +24,7 @@ class App extends Component {
     return (
       <div className="App">
         <Registration />
-        <br/>
+        {/*<br/>
         <br/>
         <Login />
         <br/>
@@ -34,7 +34,7 @@ class App extends Component {
         <ShoppingListTable shoppingLists={shoppingLists} />
         <br/>
         <h1> Sample shopping list items</h1>
-        <ItemTable items={items} />
+        <ItemTable items={items} />*/}
       </div>
     );
   }
