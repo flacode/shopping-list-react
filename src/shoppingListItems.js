@@ -25,8 +25,26 @@ ItemRow.propTypes = {
 }
 
 class ItemTable extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            items: []
+        }
+    }
+
+    componentDidMount(){
+        const items = [
+            {"name": "rice", "id": "1", "bought_from": "supermarket", "quantity": "5", "status": "false"},
+            {"name": "plates", "id": "2", "bought_from": "supermarket", "quantity": "2", "status": "false"},
+            {"name": "matooke", "id": "3", "bought_from": "market", "quantity": "6", "status": "true"}
+          ]
+        this.setState({
+            items,
+        });
+    }
+
     render(){
-        const rows = this.props.items.map((item) => {
+        const rows = this.state.items.map((item) => {
             return(
                 <ItemRow
                 item={item} 
