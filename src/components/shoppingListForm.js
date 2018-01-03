@@ -3,27 +3,25 @@ import PropTypes from 'prop-types';
 
 class ShoppingListForm extends Component{
     state = {
-        name: this.props.name || '',
-        due_date: this.props.due_date || ''
+        fields: {
+            name: this.props.name || '',
+            due_date: this.props.due_date || ''
+        }
     };
 
-    handleNameChange = (e) => {
+    onInputChange = (e) => {
+        const fields = this.state.fields;
+        fields[e.target.name] = e.target.value;
         this.setState({
-            name: e.target.value,
-        })
-    }
-
-    handleDateChange = (e) => {
-        this.setState({
-            due_date: e.target.value,
+            fields,
         })
     }
 
     handleFormSubmit = () => {
         this.props.onFormSubmit({
             id: this.props.id,
-            name: this.state.name,
-            due_date: this.state.due_date
+            name: this.state.fields.name,
+            due_date: this.state.fields.due_date
         })
     }
 
@@ -34,15 +32,18 @@ class ShoppingListForm extends Component{
                 <label>
                     Name:
                     <input
-                        type="text"
-                        onChange={this.handleNameChange}
+                        name="name"
+                        value={this.state.fields.name}
+                        onChange={this.onInputChange}
                     />
                 </label>
                 <label>
                     Due date:
                     <input
                         type="date"
-                        onChange={this.handleDateChange}
+                        name="due_date"
+                        value={this.state.fields.due_date}
+                        onChange={this.onInputChange}
                     />
                 </label>
                 <button onClick={this.handleFormSubmit}>{submitText}</button>

@@ -57,19 +57,18 @@ class ShoppingListDashboard extends Component {
     }
 }
 
-class ShoppingListTable extends Component {
-    render(){
-        const rows = this.props.shoppingLists.map((shoppingList) => {
-            return(
-                <ShoppingListRow
+const ShoppingListTable = (props) => {
+    const rows = props.shoppingLists.map((shoppingList) => {
+        return(
+            <ShoppingListRow
                 shoppingList={shoppingList}
                 key={shoppingList.id.toString()}
-                handleDelete={this.props.handleDeleteRow}
-                handleUpdate={this.props.handleUpdateRow}
-                />
-            );
-                });
-        return (
+                handleDelete={props.handleDeleteRow}
+                handleUpdate={props.handleUpdateRow}
+            />
+        );
+    });
+    return (
         <Table> 
             <thead>
                 <tr>
@@ -79,8 +78,7 @@ class ShoppingListTable extends Component {
             </thead>
             <tbody>{rows}</tbody>
         </Table>
-            );
-    }
+    );
 }
 
 ShoppingListTable.propTypes = {

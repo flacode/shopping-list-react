@@ -3,43 +3,29 @@ import PropTypes from 'prop-types';
 
 class ItemForm extends Component{
     state = {
-        name: this.props.name || '',
-        quantity: this.props.quatity || '',
-        status: this.props.status || '',
-        bought_from: this.props.bought_from || '',
+        fields: {
+            name: this.props.name || '',
+            quantity: this.props.quantity || '',
+            status: this.props.status || '',
+            bought_from: this.props.bought_from || ''
+        }
     };
 
-    handleNameChange = (e) => {
+    onInputChange = (e) => {
+        const fields = this.state.fields;
+        fields[e.target.name] = e.target.value;
         this.setState({
-            name: e.target.value,
-        })
-    }
-
-    handleQuantityChange = (e) => {
-        this.setState({
-            quantity: e.target.value,
-        })
-    }
-
-    handleStatusChange = (e) => {
-        this.setState({
-            status: e.target.value,
-        })
-    }
-
-    handleBoughtFromChange = (e) => {
-        this.setState({
-            bought_from: e.target.value,
+            fields,
         })
     }
 
     handleFormSubmit = () =>{
         this.props.onFormSubmit({
             id: this.props.id,
-            name: this.state.name,
-            quantity: this.state.quantity,
-            status: this.state.status,
-            bought_from: this.state.bought_from,
+            name: this.state.fields.name,
+            quantity: this.state.fields.quantity,
+            status: this.state.fields.status,
+            bought_from: this.state.fields.bought_from,
         })
     }
 
@@ -50,30 +36,35 @@ class ItemForm extends Component{
                 <label>
                     Name:
                     <input
-                        type="text"
-                        onChange={this.handleNameChange}
+                        name="name"
+                        value={this.state.fields.name}
+                        onChange={this.onInputChange}
                     />
                 </label>
                 <label>
                     Quantity:
                     <input
                         type="number"
-                        onChange={this.handleQuantityChange}
+                        name="quantity"
+                        value={this.state.fields.quantity}
+                        onChange={this.onInputChange}
                         min="0"
                     />
                 </label>
                 <label>
                     Bought From
                     <input
-                        type="text"
-                        onChange={this.handleBoughtFromChange}
+                        name="bought_from"
+                        value={this.state.fields.bought_from}
+                        onChange={this.onInputChange}
                     />
                 </label>
                 <label>
                     Status
                     <input
-                        type="text"
-                        onChange={this.handleStatusChange}
+                        name="status"
+                        value={this.state.fields.status}
+                        onChange={this.onInputChange}
                     />
                 </label>
                 <button onClick={this.handleFormSubmit}>{submitText}</button>
