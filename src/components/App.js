@@ -13,19 +13,13 @@ class App extends Component {
     return (
       <Grid>
         <LoginForm />
+        <hr />
         <RegistrationForm />
+        <hr />
         <ShoppingListDashboard />
+        <hr />
         <h1> Sample shopping list items...</h1>
         <ItemDashBoard />
-        {/*<br/>
-        <br/>
-        <Login />
-        <br/>
-        <br/>
-        <NewShoppingList items={items} />
-        <ShoppingListTable shoppingLists={shoppingLists} />
-        <br/>
-        */}
       </Grid>
     );
   }

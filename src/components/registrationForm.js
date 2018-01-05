@@ -115,7 +115,7 @@ class RegistrationForm extends Component {
                     <input type="submit" disabled={this.validate()}/>
                     <input type="reset"/>
                 </form>
-                <h2>Users</h2>
+                <h3>Sample registered users</h3>
                     {this.state.users.map((user, i) =>
                         <p key={i}>{user.username}, {user.email}, {user.password}, {user.confirmPassword}</p>
                     )}

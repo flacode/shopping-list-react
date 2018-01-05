@@ -81,7 +81,7 @@ class LoginForm extends Component {
                     <input type="submit" disabled={this.validate()}/>
                     <input type="reset"/>
                 </form>
-                <h2>Users logged in</h2>
+                <h3>Sample logged in users</h3>
                     {this.state.users.map((user, i) =>
                         <p key={i}>{user.username}, {user.password}</p>
                     )}
