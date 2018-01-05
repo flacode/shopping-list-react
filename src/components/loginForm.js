@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import Field from './field.js';
-import isEmail from 'validator/lib/isEmail';
 
-class RegistrationForm extends Component {
+class LoginForm extends Component {
     state = {
         users: [],
         fields: {
             username: '',
-            email: '',
             password: '',
-            confirmPassword: '',
         },
         fieldErrors: {},
     }
@@ -30,9 +27,7 @@ class RegistrationForm extends Component {
         this.setState({
             fields: {
                 username: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
+                password: ''
             }
         });
     }
@@ -48,9 +43,7 @@ class RegistrationForm extends Component {
             users: users.concat(user),
             fields: {
                 username: '',
-                email: '',
                 password: '',
-                confirmPassword: '',
             }
         });
     }
@@ -60,9 +53,7 @@ class RegistrationForm extends Component {
         const fieldErrors = this.state.fieldErrors;
         const errMessages = Object.keys(fieldErrors).filter((k) => fieldErrors[k])
         if (!user.username) return true;
-        if (!user.email) return true;
         if (!user.password) return true;
-        if (!user.confirmPassword) return true;
         if(errMessages.length) return true;
         return false;
     }
@@ -70,24 +61,13 @@ class RegistrationForm extends Component {
     render(){
         return(
             <div>
-                <h1>User Registration</h1>
+                <h1>Login</h1>
                 <form onSubmit={this.onFormSubmit} onReset={this.onFormReset}>
                     <Field
-                        label="Username:"
+                        label="Username or Email:"
                         name="username"
                         value={this.state.fields.username}
                         onChange={this.onInputChange}
-                    />
-                    <br />
-                    <Field
-                        label="Email:"
-                        name="email"
-                        type="email"
-                        value={this.state.fields.email}
-                        onChange={this.onInputChange}
-                        validate={
-                            (val) => isEmail(val) ? false : "Invalid Email"
-                        }
                     />
                     <br />
                     <Field
@@ -96,32 +76,18 @@ class RegistrationForm extends Component {
                         type="password"
                         value={this.state.fields.password}
                         onChange={this.onInputChange}
-                        validate={
-                            (val) => val.length >= 8 ? false : "Password should be atleast 8 characters long"
-                        }
-                    />
-                    <br />
-                    <Field
-                        label="Confirm Password:" 
-                        name="confirmPassword"
-                        type="password"
-                        value={this.state.fields.confirmPassword}
-                        onChange={this.onInputChange}
-                        validate={
-                            (val) => val===this.state.fields.password ? false : "Passwords do not match"
-                        }
                     />
                     <br />
                     <input type="submit" disabled={this.validate()}/>
                     <input type="reset"/>
                 </form>
-                <h2>Users</h2>
+                <h2>Users logged in</h2>
                     {this.state.users.map((user, i) =>
-                        <p key={i}>{user.username}, {user.email}, {user.password}, {user.confirmPassword}</p>
+                        <p key={i}>{user.username}, {user.password}</p>
                     )}
             </div>
         );
     }
 }
 
-export default RegistrationForm;
+export default LoginForm;

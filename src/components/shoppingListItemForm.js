@@ -1,25 +1,47 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Field from './field.js';
+import validator from 'validator';
 
 class ItemForm extends Component{
     state = {
         fields: {
             name: this.props.name || '',
             quantity: this.props.quantity || '',
-            status: this.props.status || '',
+            status: this.props.status || false,
             bought_from: this.props.bought_from || ''
-        }
+        },
+        fieldErrors: {}
     };
 
-    onInputChange = (e) => {
+    onInputChange = ({name, value, error}) => {
         const fields = this.state.fields;
-        fields[e.target.name] = e.target.value;
+        const fieldErrors = this.state.fieldErrors;
+        fields[name] = value;
+        fieldErrors[name] = error;
         this.setState({
             fields,
+            fieldErrors
         })
     }
 
-    handleFormSubmit = () =>{
+    validate = () => {
+        const item = this.state.fields;
+        const fieldErrors = this.state.fieldErrors;
+        const errMessages = Object.keys(fieldErrors).filter((k) => fieldErrors[k])
+        if (!item.name) return true;
+        if (!item.quantity) return true;
+        if (!item.status) return true;
+        if (!item.bought_from) return true;
+        if(errMessages.length) return true;
+        return false;
+    }
+
+    handleFormSubmit = (evt) => {
+        evt.preventDefault();
+
+        if (this.validate()) return;
+
         this.props.onFormSubmit({
             id: this.props.id,
             name: this.state.fields.name,
@@ -33,41 +55,39 @@ class ItemForm extends Component{
         const submitText = this.props.id ? 'Update' : 'Create';
         return(
             <div>
-                <label>
-                    Name:
-                    <input
-                        name="name"
-                        value={this.state.fields.name}
-                        onChange={this.onInputChange}
-                    />
-                </label>
-                <label>
-                    Quantity:
-                    <input
-                        type="number"
-                        name="quantity"
-                        value={this.state.fields.quantity}
-                        onChange={this.onInputChange}
-                        min="0"
-                    />
-                </label>
-                <label>
-                    Bought From
-                    <input
-                        name="bought_from"
-                        value={this.state.fields.bought_from}
-                        onChange={this.onInputChange}
-                    />
-                </label>
-                <label>
-                    Status
-                    <input
-                        name="status"
-                        value={this.state.fields.status}
-                        onChange={this.onInputChange}
-                    />
-                </label>
-                <button onClick={this.handleFormSubmit}>{submitText}</button>
+                <Field
+                    label="Name:"
+                    name="name"
+                    value={this.state.fields.name}
+                    onChange={this.onInputChange}
+                    validate={(val) => validator.isAlphanumeric(val) ? false : "Item name should contain numbers or letters only."}
+                />
+                <br />
+                <Field
+                    label="Quantity:"
+                    name="quantity"
+                    value={this.state.fields.quantity}
+                    onChange={this.onInputChange}
+                    validate={(val) => validator.isFloat(val) ? false : "Quantity should be a number."}
+                />
+                <br />
+                <Field
+                    label="Bought From:"
+                    name="bought_from"
+                    value={this.state.fields.bought_from}
+                    onChange={this.onInputChange}
+                />
+                <br />
+                <Field
+                    label="Status:"
+                    name="status"
+                    type="checkbox"
+                    value={this.state.fields.status ? "true" : "false"} // set value to tru or false
+                    onChange={this.onInputChange}
+                    validate={(val) => validator.isBoolean(val) ? false : "Status can only be true or false."}
+                />
+                <br />
+                <button onClick={this.handleFormSubmit} disabled={this.validate()} >{submitText}</button>
                 <button onClick={this.props.onFormClose}>Cancel</button>
             </div>
         );
