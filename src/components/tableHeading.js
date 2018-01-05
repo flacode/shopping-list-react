@@ -10,5 +10,5 @@ export default class TableHeading extends Component{
 }
 
 TableHeading.propTypes = {
-    heading: PropTypes.string.isRequired
+    heading: PropTypes.string.isRequired,
 }

@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import ShoppingListTable from './shoppingList';
-import ItemTable from './shoppingListItems';
+import ShoppingListDashboard from './shoppingList';
+import ItemDashBoard from './shoppingListItems';
+import {Grid} from 'react-bootstrap';
 //import Login from './Login';
 //import NewShoppingList from './createShoppingList';
-import './App.css';
+import '../App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <h1>Sample Shopping Lists</h1>
-        <ShoppingListTable />
+      <Grid>
+        <ShoppingListDashboard />
         <h1> Sample shopping list items</h1>
-        <ItemTable />
+        <ItemDashBoard />
         {/*<br/>
         <br/>
         <Login />
@@ -22,7 +22,7 @@ class App extends Component {
         <ShoppingListTable shoppingLists={shoppingLists} />
         <br/>
         */}
-      </div>
+      </Grid>
     );
   }
 }
