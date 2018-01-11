@@ -1,24 +1,21 @@
-let token = ''
-window.client = (function () {
-    function getShoppingLists(success) { // success wikk be called on success
-        const url = 'http://127.0.0.1:5000/api/shoppinglist/'
-        return fetch(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token,
-            },
-        }).then(checkStatus)
-          .then(success)
-    }
+import axios from 'axios/lib/axios'
+const API = "http://127.0.0.1:5000/api/";
+let token;
+let apiClient;
+let url;
 
-    function checkStatus(response) {
-        if (response.status >= 200 && response.status < 300){
-            token = response.access_token
-            return response
-        }
-    }
+apiClient = {
+    registerUser: (user, success, message) => {
+        url = API + "auth/register";
+        axios.post(url, user)
+          .then(response => {
+              success(response.data.message)
+          })
+          .catch((error) => {
+                message(error.response.data.message);
+                console.log("Server error: " + error.response.data.message);
+          });
+    },
+}
 
-    return {
-        getShoppingLists,
-    };
-}());
+export default apiClient;
