@@ -3,15 +3,6 @@ import PropTypes from 'prop-types';
 
 // component for validation of individual form fields
 class Field extends Component {
-    static propTypes = {
-        label: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        type: PropTypes.string,
-        value: PropTypes.string,
-        validate: PropTypes.func,
-        onChange: PropTypes.func.isRequired,
-    }
-
     state = {
         value: this.props.value,
         error: false
@@ -25,9 +16,9 @@ class Field extends Component {
     }
 
     // method to accept and validate user input, update state and call parent event handler
-    onChange = (evt) => {
+    onChange = (event) => {
         const name = this.props.name;
-        const value = evt.target.value;
+        const value = event.target.value;
         const error = this.props.validate ? this.props.validate(value) : false;
 
         this.setState(
@@ -63,4 +54,14 @@ class Field extends Component {
         );
     }
 }
+
+Field.propTypes = {
+    label: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    value: PropTypes.string,
+    validate: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
+}
+
  export default Field; 

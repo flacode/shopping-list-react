@@ -37,8 +37,8 @@ class ItemForm extends Component{
         return false;
     }
 
-    handleFormSubmit = (evt) => {
-        evt.preventDefault();
+    handleFormSubmit = (event) => {
+        event.preventDefault();
 
         if (this.validate()) return;
 

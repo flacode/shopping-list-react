@@ -4,8 +4,6 @@ import ItemDashBoard from './shoppingListItems';
 import RegistrationForm from './registrationForm';
 import LoginForm from './loginForm';
 import {Grid} from 'react-bootstrap';
-//import Login from './Login';
-//import NewShoppingList from './createShoppingList';
 import '../App.css';
 
 class App extends Component {

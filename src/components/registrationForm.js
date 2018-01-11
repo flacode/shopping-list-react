@@ -25,8 +25,8 @@ class RegistrationForm extends Component {
         });
     }
 
-    onFormReset = (evt) => {
-        evt.preventDefault();
+    onFormReset = (event) => {
+        event.preventDefault();
         this.setState({
             fields: {
                 username: '',
@@ -37,8 +37,8 @@ class RegistrationForm extends Component {
         });
     }
 
-    onFormSubmit = (evt) => {
-        evt.preventDefault();
+    onFormSubmit = (event) => {
+        event.preventDefault();
         const user = this.state.fields;
         const users = this.state.users;
 
