@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Field from './field.js';
 import isEmail from 'validator/lib/isEmail';
-import apiClient from '../client.js';
+import Client from '../client.js';
 
 class RegistrationForm extends Component {
     state = {
@@ -43,7 +43,7 @@ class RegistrationForm extends Component {
     }
 
     successServer = (message) => {
-        return this.setState({
+        this.setState({
             server: {
                 error: false,
                 message: message,
@@ -52,7 +52,7 @@ class RegistrationForm extends Component {
     }
 
     errorServer = (message) => {
-        return this.setState({
+        this.setState({
             server: {
                 error: true,
                 message: message,
@@ -74,32 +74,29 @@ class RegistrationForm extends Component {
         return false;
     }
 
+    validateServer = () => {
+        console.log("Validated server", this.state.server);
+    }
+
+
     onFormSubmit = (evt) => {
         evt.preventDefault();
         let user = this.state.fields;
         let users = this.state.users;
 
+
         // validate fields before updating state
         if(this.validate()) return;
 
         // send validated data to the server
-        apiClient.registerUser(user, this.successServer, this.errorServer);
-
-        console.log("state", this.state.server);
+        Client.registerUser(user, this.successServer, this.errorServer);
+        
         //if(!this.validate()) { console.log("Server error"); return; };
-        users.push(user)
-        this.setState({
-            // users: users,
-            fields: {
-                username: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-            }
-        });
+        users.push(user);
     }
 
     render(){
+        console.log("Validated server", this.state.server);
         return(
             <div>
                 <h1>User Registration</h1>
