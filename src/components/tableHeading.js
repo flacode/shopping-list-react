@@ -11,4 +11,4 @@ TableHeading.propTypes = {
     heading: PropTypes.string.isRequired,
 }
 
-export default TableHeading
+export default TableHeading;
