@@ -71,12 +71,12 @@ class RegistrationForm extends Component {
         const user = this.state.fields;
         const fieldErrors = this.state.fieldErrors;
         const serverErrors = this.state.server;
-        const errMessages = Object.keys(fieldErrors).filter((k) => fieldErrors[k])
+        const errorMessages = Object.keys(fieldErrors).filter((k) => fieldErrors[k])
         if (!user.username) return true;
         if (!user.email) return true;
         if (!user.password) return true;
         if (!user.confirmPassword) return true;
-        if (errMessages.length) return true;
+        if (errorMessages.length) return true;
         if (serverErrors.error) return true;
         return false;
     }
