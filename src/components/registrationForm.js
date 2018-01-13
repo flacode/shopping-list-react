@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import Field from './field.js';
 import isEmail from 'validator/lib/isEmail';
 import Client from '../client.js';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
+import { Container, Button, Form, FormGroup, Alert, Card, CardBody, CardTitle, CardImg, CardSubtitle } from 'reactstrap';
+import '../App.css';
+import logo from'../imgs/shoppinglist.png';
 
 class RegistrationForm extends Component {
     state = {
         fields: {
-            username: 'flavia',
-            email: 'flavia.nshemerirwe@gmail.com',
-            password: '1234567890',
-            confirmPassword: '1234567890',
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
         },
         fieldErrors: {},
         server: {
@@ -92,58 +95,86 @@ class RegistrationForm extends Component {
     render(){
         return(
             // TODO: send the successful registration message through login redirect
-            <div>
-                {
+            <Container>
+                { 
                     // check if there are no server errors then redirect to login
                     this.state.server.error === false ? <Redirect to='/login'/> : null
                 }
-                <h1>User Registration</h1>
-                {this.state.server.error && <span style={{color: "red"}}>{this.state.server.message}</span> }
-                <form onSubmit={this.onFormSubmit} onReset={this.onFormReset}>
-                    <Field
-                        label="Username:"
-                        name="username"
-                        value={this.state.fields.username}
-                        onChange={this.onInputChange}
-                    />
-                    <br />
-                    <Field
-                        label="Email:"
-                        name="email"
-                        type="email"
-                        value={this.state.fields.email}
-                        onChange={this.onInputChange}
-                        validate={
-                            (val) => isEmail(val) ? false : "Invalid Email"
-                        }
-                    />
-                    <br />
-                    <Field
-                        label="Password:" 
-                        name="password"
-                        type="password"
-                        value={this.state.fields.password}
-                        onChange={this.onInputChange}
-                        validate={
-                            (val) => val.length >= 8 ? false : "Password should be atleast 8 characters long"
-                        }
-                    />
-                    <br />
-                    <Field
-                        label="Confirm Password:" 
-                        name="confirmPassword"
-                        type="password"
-                        value={this.state.fields.confirmPassword}
-                        onChange={this.onInputChange}
-                        validate={
-                            (val) => val===this.state.fields.password ? false : "Passwords do not match"
-                        }
-                    />
-                    <br />
-                    <input type="submit" disabled={this.validate()}/>
-                    <input type="reset"/>
-                </form>
-            </div>
+                <Card className="card-container">
+                    <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>
+                    <CardImg className="img-card" src={logo} alt="Card image cap" />
+                    <CardSubtitle className="name-card">Sign up</CardSubtitle>
+                    <CardBody>
+                    {this.state.server.error && <Alert color="danger">{this.state.server.message}</Alert> }
+                    <Form className="form-signin">
+                        <FormGroup>
+                            <Field
+                                label="Username:"
+                                name="username"
+                                value={this.state.fields.username}
+                                onChange={this.onInputChange}
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Field
+                                label="Email:"
+                                name="email"
+                                type="email"
+                                value={this.state.fields.email}
+                                onChange={this.onInputChange}
+                                validate={
+                                    (val) => isEmail(val) ? false : "Invalid Email"
+                                }
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Field
+                                label="Password:" 
+                                name="password"
+                                type="password"
+                                value={this.state.fields.password}
+                                onChange={this.onInputChange}
+                                validate={
+                                    (val) => val.length >= 8 ? false : "Password should be atleast 8 characters long"
+                                }
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Field
+                                label="Confirm Password:" 
+                                name="confirmPassword"
+                                type="password"
+                                value={this.state.fields.confirmPassword}
+                                onChange={this.onInputChange}
+                                validate={
+                                    (val) => val===this.state.fields.password ? false : "Passwords do not match"
+                                }
+                            />
+                        </FormGroup>
+                        <Button
+                            className="btn-signin"
+                            disabled={this.validate()}
+                            onClick={this.onFormSubmit}
+                            color="primary"
+                            block
+                        >
+                            Submit
+                        </Button>{' '}
+                        <Button
+                            className="btn-signin"
+                            onClick={this.onFormReset}
+                            color="secondary"
+                            block
+                        >
+                            Reset
+                        </Button>
+                    </Form>
+                    <p className="login">
+                        Already have an account, please <Link to="/login" className="login-link">login</Link>.
+                    </p>
+                    </CardBody>
+                </Card>
+            </Container>
         );
     }
 }
