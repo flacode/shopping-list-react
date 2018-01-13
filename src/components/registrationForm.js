@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import Field from './field.js';
 import isEmail from 'validator/lib/isEmail';
 import Client from '../client.js';
+import { Redirect } from 'react-router-dom';
 
 class RegistrationForm extends Component {
     state = {
-        users: [],
         fields: {
             username: 'flavia',
             email: 'flavia.nshemerirwe@gmail.com',
@@ -26,7 +26,11 @@ class RegistrationForm extends Component {
         fieldErrors[name] = error;
         this.setState({
             fields,
-            fieldErrors
+            fieldErrors,
+            server: {
+                error: '',
+                message: '',
+            }
         });
     }
 
@@ -74,31 +78,25 @@ class RegistrationForm extends Component {
         return false;
     }
 
-    validateServer = () => {
-        console.log("Validated server", this.state.server);
-    }
-
-
     onFormSubmit = (evt) => {
         evt.preventDefault();
         let user = this.state.fields;
-        let users = this.state.users;
-
 
         // validate fields before updating state
         if(this.validate()) return;
 
         // send validated data to the server
         Client.registerUser(user, this.successServer, this.errorServer);
-        
-        //if(!this.validate()) { console.log("Server error"); return; };
-        users.push(user);
     }
 
     render(){
-        console.log("Validated server", this.state.server);
         return(
+            // TODO: send the successful registration message through login redirect
             <div>
+                {
+                    // check if there are no server errors then redirect to login
+                    this.state.server.error === false ? <Redirect to='/login'/> : null
+                }
                 <h1>User Registration</h1>
                 {this.state.server.error && <span style={{color: "red"}}>{this.state.server.message}</span> }
                 <form onSubmit={this.onFormSubmit} onReset={this.onFormReset}>
@@ -145,10 +143,6 @@ class RegistrationForm extends Component {
                     <input type="submit" disabled={this.validate()}/>
                     <input type="reset"/>
                 </form>
-                <h3>Sample registered users</h3>
-                { this.state.users ? this.state.users.map((user, i) => 
-                        <p key={i}>{user.username}, {user.email}, {user.password}, {user.confirmPassword}</p>
-                    ) : 'not found'}
             </div>
         );
     }

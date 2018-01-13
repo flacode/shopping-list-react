@@ -1,26 +1,21 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import ShoppingListDashboard from './shoppingList';
 import ItemDashBoard from './shoppingListItems';
 import RegistrationForm from './registrationForm';
 import LoginForm from './loginForm';
-import {Grid} from 'react-bootstrap';
-//import Login from './Login';
-//import NewShoppingList from './createShoppingList';
-import '../App.css';
 
 class App extends Component {
   render() {
     return (
-      <Grid>
-        <LoginForm />
-        <hr />
-        <RegistrationForm />
-        <hr />
-        <ShoppingListDashboard />
-        <hr />
-        <h1> Sample shopping list items...</h1>
-        <ItemDashBoard />
-      </Grid>
+      <div>
+        <Switch>
+          <Route path='/register' component={RegistrationForm}/>
+          <Route path='/login' component={LoginForm}/>
+          <Route exact path='/shoppinglist/items' component={ItemDashBoard}/>
+          <Route path='/shoppinglist' component={ShoppingListDashboard}/>
+        </Switch>
+      </div>
     );
   }
 }
