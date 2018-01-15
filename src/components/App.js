@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import ShoppingListDashboard from './shoppingList';
-import ItemDashBoard from './shoppingListItems';
-import RegistrationForm from './registrationForm';
-import LoginForm from './loginForm';
+import ShoppingListDashboard from './shoppingList/shoppingList';
+import ItemDashBoard from './listItems/shoppingListItems';
+import RegistrationForm from './account/registrationForm';
+import LoginForm from './account/loginForm';
 
 class App extends Component {
   render() {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Label, Input, FormFeedback } from 'reactstrap';
+import { Input, FormFeedback } from 'reactstrap';
 
 // component for validation of individual form fields
 class Field extends Component {
@@ -44,13 +44,10 @@ class Field extends Component {
     render() {
         return(
             <div>
-                <Label>{this.props.label}</Label>
-                        <span style={{color: "red"}}>
-                            {"*"}
-                        </span>
                 <Input 
                     name={this.props.name}
                     value={this.state.value}
+                    placeholder={this.props.label}
                     type={this.props.type}
                     onChange={this.onChange}
                     valid={this.state.error ? false : null }
@@ -61,4 +58,3 @@ class Field extends Component {
     }
 }
  export default Field;
- 

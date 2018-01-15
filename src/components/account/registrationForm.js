@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Field from './field.js';
-import isEmail from 'validator/lib/isEmail';
-import Client from '../client.js';
+import Field from '../field.js';
+import validator from 'validator';
+import Client from '../../client.js';
 import { Redirect, Link } from 'react-router-dom';
 import { Container, Button, Form, FormGroup, Alert, Card, CardBody, CardTitle, CardImg, CardSubtitle } from 'reactstrap';
-import '../App.css';
-import logo from'../imgs/shoppinglist.png';
+import '../../App.css';
+import logo from'../../imgs/shoppinglist.png';
 
 class RegistrationForm extends Component {
     state = {
@@ -19,9 +19,11 @@ class RegistrationForm extends Component {
         server: {
             error: '',
             message: '',
+            _saveStatus: false, 
         }
     }
 
+    // funtion to handle input change by updating the state
     onInputChange = ({name, value, error}) => {
         const fields = this.state.fields;
         const fieldErrors = this.state.fieldErrors;
@@ -37,6 +39,7 @@ class RegistrationForm extends Component {
         });
     }
 
+    // function to clear the form fields on reset
     onFormReset = (evt) => {
         evt.preventDefault();
         this.setState({
@@ -49,6 +52,7 @@ class RegistrationForm extends Component {
         });
     }
 
+    // function to handle a successful API operation
     successServer = (message) => {
         this.setState({
             server: {
@@ -58,6 +62,7 @@ class RegistrationForm extends Component {
          });
     }
 
+    // function to handle unsuccessful API Ooperation
     errorServer = (message) => {
         this.setState({
             server: {
@@ -67,6 +72,7 @@ class RegistrationForm extends Component {
         });
     }
 
+    // function to validate the form for both field and form errors
     validate = () => {
         const user = this.state.fields;
         const fieldErrors = this.state.fieldErrors;
@@ -81,6 +87,7 @@ class RegistrationForm extends Component {
         return false;
     }
 
+    // function to handle the submit event of the form
     onFormSubmit = (evt) => {
         evt.preventDefault();
         let user = this.state.fields;
@@ -89,7 +96,9 @@ class RegistrationForm extends Component {
         if(this.validate()) return;
 
         // send validated data to the server
+        this.setState({server: {_saveStatus: true}})
         Client.registerUser(user, this.successServer, this.errorServer);
+        this.setState({server: {_saveStatus: false}})
     }
 
     render(){
@@ -109,27 +118,30 @@ class RegistrationForm extends Component {
                     <Form className="form-signin">
                         <FormGroup>
                             <Field
-                                label="Username:"
+                                label="Username"
                                 name="username"
                                 value={this.state.fields.username}
                                 onChange={this.onInputChange}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Field
-                                label="Email:"
-                                name="email"
-                                type="email"
-                                value={this.state.fields.email}
-                                onChange={this.onInputChange}
                                 validate={
-                                    (val) => isEmail(val) ? false : "Invalid Email"
+                                    (val) => validator.isAlphanumeric(val) ? false : "Invalid Username, should contain only letters and numbers"
                                 }
                             />
                         </FormGroup>
                         <FormGroup>
                             <Field
-                                label="Password:" 
+                                label="Email"
+                                name="email"
+                                type="email"
+                                value={this.state.fields.email}
+                                onChange={this.onInputChange}
+                                validate={
+                                    (val) => validator.isEmail(val) ? false : "Invalid Email"
+                                }
+                            />
+                        </FormGroup>
+                        <FormGroup>
+                            <Field
+                                label="Password" 
                                 name="password"
                                 type="password"
                                 value={this.state.fields.password}
@@ -141,7 +153,7 @@ class RegistrationForm extends Component {
                         </FormGroup>
                         <FormGroup>
                             <Field
-                                label="Confirm Password:" 
+                                label="Confirm Password" 
                                 name="confirmPassword"
                                 type="password"
                                 value={this.state.fields.confirmPassword}
@@ -151,9 +163,14 @@ class RegistrationForm extends Component {
                                 }
                             />
                         </FormGroup>
+                        
+                        {/*
+                            * disable the button when sending data to the server to avoid multiple submissions.
+                            * when form has invalid
+                        */ }
                         <Button
                             className="btn-signin"
-                            disabled={this.validate()}
+                            disabled={this.validate() || this.state.server._saveStatus }
                             onClick={this.onFormSubmit}
                             color="primary"
                             block
