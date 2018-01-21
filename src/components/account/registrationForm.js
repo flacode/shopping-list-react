@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Alert, Card, CardBody, CardTitle, CardImg, CardSubtitle } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Alert, Card, CardBody, CardTitle, CardImg } from 'reactstrap';
 import validator from 'validator';
 import Field from '../field';
 import Client from '../../client';
@@ -113,8 +113,8 @@ class RegistrationForm extends Component {
             <Card className="card-container">
               <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>
               <CardImg className="img-card" src={logo} alt="Card image cap" />
-              <CardSubtitle className="name-card">Sign up</CardSubtitle>
               <CardBody>
+                <h3 className="name-card">Sign up</h3>
                 {this.state.server.error && <Alert color="danger">{this.state.server.message}</Alert> }
                 <Form className="form-signin">
                   <FormGroup>
@@ -171,7 +171,7 @@ class RegistrationForm extends Component {
                     * avoid submitting invalid data
                 */ }
                   <Button
-                    className="btn-signin"
+                    className="btn-auth"
                     disabled={this.validate() || this.state.server.saveStatus}
                     onClick={this.onFormSubmit}
                     color="primary"
@@ -180,7 +180,7 @@ class RegistrationForm extends Component {
                             Submit
                   </Button>{' '}
                   <Button
-                    className="btn-signin"
+                    className="btn-auth"
                     onClick={this.onFormReset}
                     color="secondary"
                     block
@@ -189,7 +189,7 @@ class RegistrationForm extends Component {
                   </Button>
                 </Form>
                 <p className="login">
-                        Already have an account, please <Link to="/login" className="login-link">login</Link>.
+                        Already have an account, please <Link to="/login" className="auth-link">login</Link>.
                 </p>
               </CardBody>
             </Card>

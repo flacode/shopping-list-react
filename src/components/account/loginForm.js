@@ -1,5 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Container, Button, Form, FormGroup, Alert, Card, CardBody, CardTitle, CardImg } from 'reactstrap';
 import Field from '../field';
+import Client from '../../client';
+import '../../App.css';
+import logo from '../../imgs/shoppinglist.png';
 
 class LoginForm extends React.Component {
     state = {
@@ -47,7 +52,8 @@ class LoginForm extends React.Component {
     }
 
     validate = () => {
-      const { user, fieldErrors } = this.state;
+      const user = this.state.fields;
+      const fieldErrors = this.state.fieldErrors;
       const errMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
       if (!user.username) return true;
       if (!user.password) return true;
@@ -57,31 +63,47 @@ class LoginForm extends React.Component {
 
     render() {
       return (
-        <div>
-          <h1>Login</h1>
-          <form onSubmit={this.onFormSubmit} onReset={this.onFormReset}>
-            <Field
-              label="Username or Email:"
-              name="username"
-              value={this.state.fields.username}
-              onChange={this.onInputChange}
-            />
-            <br />
-            <Field
-              label="Password:"
-              name="password"
-              type="password"
-              value={this.state.fields.password}
-              onChange={this.onInputChange}
-            />
-            <br />
-            <input type="submit" disabled={this.validate()} />
-            <input type="reset" />
-          </form>
-          <h3>Sample logged in users</h3>
-          {this.state.users.map((user, i) =>
-            <p key={i}>{user.username}, {user.password}</p>)}
-        </div>
+        <Container>
+          <Card className="card-container">
+            <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>
+              <CardImg className="img-card" src={logo} alt="Card image cap" />
+              <CardBody>
+                <h3 className="name-card"> Login</h3>
+                <Form className="form-signin">
+                  <FormGroup>
+                    <Field
+                      label="Username or Email"
+                      name="username"
+                      value={this.state.fields.username}
+                      onChange={this.onInputChange}
+                    />
+                  <Link className="pull-right auth-reset" to="/reset-password">Forgot password?</Link>
+                    <Field
+                      label="Password:"
+                      name="password"
+                      type="password"
+                      value={this.state.fields.password}
+                      onChange={this.onInputChange}
+                    />
+                  </FormGroup>
+                  <div className="text-right">
+                    <Button
+                      className="btn-auth btn-signin"
+                      disabled={this.validate()}
+                      onClick={this.onFormSubmit}
+                      color="primary"
+                    >
+                      Login
+                    </Button>
+                  </div>
+                </Form>
+                <br />
+                <p className="login">
+                  Dont have an account, please sign up <Link to="/register" className="auth-link">here</Link>.
+                </p>
+              </CardBody>
+          </Card>
+        </Container>
       );
     }
 }
