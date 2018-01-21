@@ -1,3 +1,4 @@
+/* Component to render form for shopping list */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import validator from 'validator';
@@ -70,9 +71,16 @@ class ShoppingListForm extends Component {
 }
 
 ShoppingListForm.propTypes = {
-  submitText: PropTypes.string,
+  // TODO: To be used later submitText: PropTypes.string,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  due_date: PropTypes.string,
 };
+
+ShoppingListForm.defaultProps = {
+    name: null,
+    due_date: null,
+}
 
 export default ShoppingListForm;

@@ -1,3 +1,4 @@
+/* Component to render form for creating a shopping list item */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import validator from 'validator';
@@ -95,13 +96,21 @@ class ItemForm extends Component {
 }
 
 ItemForm.propTypes = {
-  submitText: PropTypes.string,
+  // TODO: submit text as a prop submitText: PropTypes.string,
   onFormClose: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   name: PropTypes.string,
   quantity: PropTypes.number,
   bought_from: PropTypes.string,
   status: PropTypes.bool,
+};
+
+ItemForm.defaultProps = {
+    // submitText: null,
+    name: null,
+    quantity: null,
+    bought_from: null,
+    status: false,
 };
 
 export default ItemForm;

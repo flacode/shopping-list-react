@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 // import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import TableHeading from '../tableHeading';
-import ItemForm from './shoppingListItemForm';
+import ItemRow from './itemRow';
+import ToggleableItemForm from './toggleForm';
 
 class ItemDashBoard extends Component {
     state = {
@@ -41,11 +42,13 @@ class ItemDashBoard extends Component {
     }
 
     handleDeleteItem = (itemId) => {
-      console.log(`item to be deleted ${itemId}`);
+        // TODO: For debugging purposes
+        console.log(`item to be deleted ${itemId}`);
     }
 
     handleUpdateItem = (itemId) => {
-      console.log(`Id for item to be updated ${itemId}`);
+        // TODO: For debugging purposes
+        console.log(`Id for item to be updated ${itemId}`);
     }
 
     render() {
@@ -87,103 +90,10 @@ const ItemTable = (props) => {
 };
 
 ItemTable.propTypes = {
-  items: PropTypes.array.isRequired,
-  handleDeleteRow: PropTypes.func.isRequired,
-  handleUpdateRow: PropTypes.func.isRequired,
-};
 
-class ItemRow extends Component {
-    onClickUpdate = () => {
-      // item object to update-redirect to edit form
-      this.props.handleUpdate(this.props.item);
-    }
-    onClickDelete = () => {
-      this.props.handleDelete(this.props.item.id);
-    }
-
-    render() {
-      const item = this.props.item;
-      return (
-        <tr>
-          <td>{item.name}</td>
-          <td>{item.quantity}</td>
-          <td>{item.bought_from}</td>
-          <td>{item.status}</td>
-          <td>
-            <button>View</button>
-            <button onClick={this.onClickUpdate}>Update</button>
-            <button onClick={this.onClickDelete}>Delete</button>
-          </td>
-        </tr>
-      );
-    }
-}
-
-ItemRow.propTypes = {
-  item: PropTypes.object.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  handleUpdate: PropTypes.func.isRequired,
-};
-
-class ToggleableItemForm extends Component {
-    state = {
-      isOpen: false,
-    };
-
-    handleAddClick = () => {
-      this.setState({
-        isOpen: true,
-      });
-    }
-
-    handleFormClose = () => {
-      this.setState({
-        isOpen: false,
-      });
-    }
-
-    handleFormSubmit = (item) => {
-      if (item.name === '') {
-        // will return error message here
-        console.log('Item name provided');
-        return;
-      }
-      if (item.quantity === '') {
-        // will return error message here
-        console.log('No quantity provided');
-        return;
-      }
-      if (item.bought_from === '') {
-        // will return error message here
-        console.log('No bought from provided');
-        return;
-      }
-      if (item.status === '') {
-        // will return error message here
-        console.log('No status provided');
-        return;
-      }
-
-      this.props.onFormSubmit(item);
-      this.setState({
-        isOpen: false,
-      });
-    }
-
-    render() {
-      if (this.state.isOpen) {
-        return (
-          <ItemForm onFormClose={this.handleFormClose} onFormSubmit={this.handleFormSubmit} />
-        );
-      }
-      return (
-        <button type="button" onClick={this.handleAddClick}>Add</button>
-      );
-    }
-}
-
-ToggleableItemForm.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
+    items: PropTypes.shape.isRequired,
+    handleDeleteRow: PropTypes.func.isRequired,
+    handleUpdateRow: PropTypes.func.isRequired,
 };
 
 export default ItemDashBoard;

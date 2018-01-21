@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TableHeading from '../tableHeading';
-import ShoppingListForm from './shoppingListForm';
+import ToggleableShoppingListForm from './toggleForm';
+import ShoppingListRow from './listRow';
 
 class ShoppingListDashboard extends Component {
     state = {
@@ -14,6 +15,10 @@ class ShoppingListDashboard extends Component {
       this.timer = setInterval(this.loadShoppingListsFromServer, 5000); // reload list automatically every 5 seconds
     }
 
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
+
     loadShoppingListsFromServer = () => {
       const shoppingLists = [
         { name: 'Food', id: '1', due_date: '2017-07-09' },
@@ -23,10 +28,6 @@ class ShoppingListDashboard extends Component {
       this.setState({
         shoppingLists,
       });
-    }
-
-    componentWillUnmount() {
-      clearInterval(this.timer);
     }
 
     handleCreateShoppingList = (shoppingList) => {
@@ -83,89 +84,9 @@ const ShoppingListTable = (props) => {
 };
 
 ShoppingListTable.propTypes = {
-  shoppingLists: PropTypes.array.isRequired,
+  shoppingLists: PropTypes.shape.isRequired,
   handleDeleteRow: PropTypes.func.isRequired,
   handleUpdateRow: PropTypes.func.isRequired,
-};
-
-class ShoppingListRow extends Component {
-    onClickUpdate = () => {
-      // shoppinglist object to update-redirect to edit form
-      this.props.handleUpdate(this.props.shoppingList);
-    }
-    onClickDelete = () => {
-      this.props.handleDelete(this.props.shoppingList.id);
-    }
-
-    render() {
-      const shoppingList = this.props.shoppingList;
-      return (
-        <tr>
-          <td>{shoppingList.name}</td>
-          <td>{shoppingList.due_date}</td>
-          <td colSpan={2}>
-            <button> View</button>
-            <button onClick={this.onClickUpdate}>Update</button>
-            <button onClick={this.onClickDelete}>Delete</button>
-          </td>
-        </tr>
-      );
-    }
-}
-ShoppingListRow.propTypes = {
-  shoppingList: PropTypes.object.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  handleUpdate: PropTypes.func.isRequired,
-};
-
-class ToggleableShoppingListForm extends Component {
-    state = {
-      isOpen: false,
-    };
-
-    handleAddClick = () => {
-      this.setState({
-        isOpen: true,
-      });
-    }
-
-    handleFormClose = () => {
-      this.setState({
-        isOpen: false,
-      });
-    }
-
-    handleFormSubmit = (shoppingList) => {
-      if (shoppingList.name === '') {
-        // will return error message here
-        console.log('No shopping list name provided');
-        return;
-      }
-      if (shoppingList.due_date === '') {
-        // will return error message here
-        console.log('No due date provided');
-        return;
-      }
-      this.props.onFormSubmit(shoppingList);
-      this.setState({
-        isOpen: false,
-      });
-    }
-
-    render() {
-      if (this.state.isOpen) {
-        return (
-          <ShoppingListForm onFormClose={this.handleFormClose} onFormSubmit={this.handleFormSubmit} />
-        );
-      }
-      return (
-        <button type="button" onClick={this.handleAddClick} />
-      );
-    }
-}
-
-ToggleableShoppingListForm.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
 };
 
 export default ShoppingListDashboard;

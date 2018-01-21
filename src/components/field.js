@@ -56,4 +56,10 @@ Field.propTypes = {
     onChange: PropTypes.func.isRequired,
 }
 
- export default Field; 
+Field.defaultProps = {
+    type: null,
+    value: null,
+    validate: null,
+}
+
+export default Field; 
