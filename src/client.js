@@ -1,11 +1,13 @@
 import axios from 'axios/lib/axios'
-const API = "https://deployment-shopping-list-api.herokuapp.com/api/";
+// const BASE_URL = "https://deployment-shopping-list-api.herokuapp.com/api";
+const BASE_URL = "http://127.0.0.1:5000/api";
 let token;
 let url;
 
 // function to register a user on the API
 const registerUser = (user, success, message) => {
-    url = API + "auth/register";
+    url = BASE_URL + '/auth/register';
+    console.log(url)
     axios.post(url, user)
     .then(response => {
         success(response.data.message)

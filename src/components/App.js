@@ -10,10 +10,11 @@ class App extends Component {
     return (
       <div>
         <Switch>
+          <Route exact path='/' component={RegistrationForm}/>
           <Route path='/register' component={RegistrationForm}/>
           <Route path='/login' component={LoginForm}/>
-          <Route exact path='/shoppinglist/items' component={ItemDashBoard}/>
           <Route path='/shoppinglist' component={ShoppingListDashboard}/>
+          <Route path='/shoppinglist/items' component={ItemDashBoard}/>
         </Switch>
       </div>
     );
