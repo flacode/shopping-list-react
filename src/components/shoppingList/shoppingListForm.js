@@ -79,8 +79,8 @@ ShoppingListForm.propTypes = {
 };
 
 ShoppingListForm.defaultProps = {
-    name: null,
-    due_date: null,
-}
+  name: null,
+  due_date: null,
+};
 
 export default ShoppingListForm;

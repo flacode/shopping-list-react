@@ -42,13 +42,13 @@ class ItemDashBoard extends Component {
     }
 
     handleDeleteItem = (itemId) => {
-        // TODO: For debugging purposes
-        console.log(`item to be deleted ${itemId}`);
+      // TODO: For debugging purposes
+      console.log(`item to be deleted ${itemId}`);
     }
 
     handleUpdateItem = (itemId) => {
-        // TODO: For debugging purposes
-        console.log(`Id for item to be updated ${itemId}`);
+      // TODO: For debugging purposes
+      console.log(`Id for item to be updated ${itemId}`);
     }
 
     render() {
@@ -91,9 +91,9 @@ const ItemTable = (props) => {
 
 ItemTable.propTypes = {
 
-    items: PropTypes.shape.isRequired,
-    handleDeleteRow: PropTypes.func.isRequired,
-    handleUpdateRow: PropTypes.func.isRequired,
+  items: PropTypes.shape.isRequired,
+  handleDeleteRow: PropTypes.func.isRequired,
+  handleUpdateRow: PropTypes.func.isRequired,
 };
 
 export default ItemDashBoard;

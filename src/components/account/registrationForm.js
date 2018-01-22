@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Alert, Card, CardBody, CardTitle, CardImg, CardSubtitle } from 'reactstrap';
+import {
+  Container,
+  Button,
+  Form,
+  FormGroup,
+  Alert,
+  Card,
+  CardBody,
+  CardTitle,
+  CardImg,
+  CardSubtitle,
+} from 'reactstrap';
 import validator from 'validator';
 import Field from '../field';
 import Client from '../../client';
@@ -124,8 +135,8 @@ class RegistrationForm extends Component {
                       value={this.state.fields.username}
                       onChange={this.onInputChange}
                       validate={
-                                    val => (validator.isAlphanumeric(val) ? false : 'Invalid Username, should contain only letters and numbers')
-                                }
+                          val => (validator.isAlphanumeric(val) ? false : 'Invalid Username, should contain only letters and numbers')
+                        }
                     />
                   </FormGroup>
                   <FormGroup>

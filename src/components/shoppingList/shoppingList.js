@@ -16,7 +16,7 @@ class ShoppingListDashboard extends Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.timer);
+      clearInterval(this.timer);
     }
 
     loadShoppingListsFromServer = () => {

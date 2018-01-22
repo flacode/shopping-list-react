@@ -47,7 +47,8 @@ class LoginForm extends React.Component {
     }
 
     validate = () => {
-      const { user, fieldErrors } = this.state;
+      const user = this.state.fields;
+      const fieldErrors = this.state.fieldErrors;
       const errMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
       if (!user.username) return true;
       if (!user.password) return true;
