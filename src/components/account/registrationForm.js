@@ -19,7 +19,7 @@ class RegistrationForm extends Component {
       server: {
         error: '',
         message: '',
-        _saveStatus: false,
+        saveStatus: false,
       },
     }
 
@@ -76,7 +76,7 @@ class RegistrationForm extends Component {
       });
     }
 
-      // function to handle unsuccessful API Ooperation
+      // function to handle unsuccessful API operation
       errorServer = (message) => {
         this.setState({
           server: {
@@ -107,9 +107,9 @@ class RegistrationForm extends Component {
         // TODO: send the successful registration message through login redirect
           <Container>
             {
-                    // check if there are no server errors then redirect to login
-                    this.state.server.error === false ? <Redirect to="/login" /> : null
-                }
+              // check if there are no server errors then redirect to login
+              this.state.server.error === false ? <Redirect to="/login" /> : null
+            }
             <Card className="card-container">
               <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>
               <CardImg className="img-card" src={logo} alt="Card image cap" />
@@ -172,7 +172,7 @@ class RegistrationForm extends Component {
                 */ }
                   <Button
                     className="btn-auth"
-                    disabled={this.validate() || this.state.server.saveStatus}
+                    disabled={this.validate() && this.state.server.saveStatus}
                     onClick={this.onFormSubmit}
                     color="primary"
                     block

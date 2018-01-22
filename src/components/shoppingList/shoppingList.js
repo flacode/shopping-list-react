@@ -16,7 +16,7 @@ class ShoppingListDashboard extends Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.timer);
+      clearInterval(this.timer);
     }
 
     loadShoppingListsFromServer = () => {
@@ -50,6 +50,7 @@ class ShoppingListDashboard extends Component {
       return (
         <div>
           <h2>Shopping list: #name</h2>
+          <p> this user is { localStorage.getItem('loggedIn') ? 'is loggedIn' : 'Not logged in'}</p>
           <ShoppingListTable
             shoppingLists={this.state.shoppingLists}
             handleDeleteRow={this.handleDeleteShoppingList}
