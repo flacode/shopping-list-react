@@ -135,7 +135,9 @@ class RegistrationForm extends Component {
                       value={this.state.fields.username}
                       onChange={this.onInputChange}
                       validate={
-                          val => (validator.isAlphanumeric(val) ? false : 'Invalid Username, should contain only letters and numbers')
+                          val => (
+                            validator.isAlphanumeric(val) ? false : 'Username should contain only letters and numbers'
+                          )
                         }
                     />
                   </FormGroup>
