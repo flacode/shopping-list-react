@@ -11,7 +11,9 @@ class ShoppingListDashboard extends Component {
 
     componentDidMount() {
         this.loadShoppingListsFromServer();
-        this.timer = setInterval(this.loadShoppingListsFromServer, 5000); // reload list automatically every 5 seconds
+
+        // reload list automatically every 5 seconds
+        setInterval(this.loadShoppingListsFromServer, 5000);
     }
 
     loadShoppingListsFromServer = () => {

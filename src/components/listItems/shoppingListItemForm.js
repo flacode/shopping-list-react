@@ -37,8 +37,8 @@ class ItemForm extends Component{
         return false;
     }
 
-    handleFormSubmit = (evt) => {
-        evt.preventDefault();
+    handleFormSubmit = (event) => {
+        event.preventDefault();
 
         if (this.validate()) return;
 
@@ -78,11 +78,14 @@ class ItemForm extends Component{
                     onChange={this.onInputChange}
                 />
                 <br />
+                
                 <Field
                     label="Status:"
                     name="status"
                     type="checkbox"
-                    value={this.state.fields.status ? "true" : "false"} // set value to tru or false
+
+                    // set value to true or false
+                    value={this.state.fields.status ? "true" : "false"}
                     onChange={this.onInputChange}
                     validate={(val) => validator.isBoolean(val) ? false : "Status can only be true or false."}
                 />

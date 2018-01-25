@@ -11,7 +11,7 @@ class ItemDashBoard extends Component{
 
     componentDidMount(){
         this.loadItemsFromServer();
-        setInterval(this.loadItemsFromServer, 5000)
+        this.timer = setInterval(this.loadItemsFromServer, 5000)
     }
 
     loadItemsFromServer = () => {
@@ -23,6 +23,11 @@ class ItemDashBoard extends Component{
         this.setState({
             items,
         });
+    }
+
+    // prevent memory leaks incase of many nested timers so that only one timer exists at a time.
+    componentWillUnmount(){
+        clearInterval(this.timer);
     }
 
     handleCreateItem = (item) => {

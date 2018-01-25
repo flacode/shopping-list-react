@@ -22,8 +22,8 @@ class LoginForm extends Component {
         });
     }
 
-    onFormReset = (evt) => {
-        evt.preventDefault();
+    onFormReset = (event) => {
+        event.preventDefault();
         this.setState({
             fields: {
                 username: '',
@@ -32,8 +32,8 @@ class LoginForm extends Component {
         });
     }
 
-    onFormSubmit = (evt) => {
-        evt.preventDefault();
+    onFormSubmit = (event) => {
+        event.preventDefault();
         const user = this.state.fields;
         const users = this.state.users;
 
@@ -78,7 +78,7 @@ class LoginForm extends Component {
                         onChange={this.onInputChange}
                     />
                     <br />
-                    <input type="submit" disabled={this.validate()}/>
+                    <input className="btn btn-primary" type="submit" disabled={this.validate()}/>
                     <input type="reset"/>
                 </form>
                 <h3>Sample logged in users</h3>
