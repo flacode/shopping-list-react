@@ -82,6 +82,7 @@ html {
   -moz-transition: all 0.218s;
   -webkit-transition: all 0.218s;
   transition: all 0.218s;
+  width: 110px;
 }
 
 .btn.btn-auth:hover,
@@ -103,8 +104,14 @@ html {
   color: rgb(34, 180, 158)
 }
 
-.auth-reset{
+.auth-reset {
   font-size: 13px;
+}
+
+.btn-center {
+  margin:auto;
+  display:block;
+  text-align:center;
 }
 /* center a button{
   margin:auto;

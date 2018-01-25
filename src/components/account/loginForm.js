@@ -5,9 +5,11 @@ import Field from '../field';
 import Client from '../../client';
 import '../../App.css';
 import logo from '../../imgs/shoppinglist.png';
+import loading from '../../imgs/loading.gif';
 
 class LoginForm extends React.Component {
     state = {
+      loading: false,
       fields: {
         username: '',
         password: '',
@@ -16,7 +18,6 @@ class LoginForm extends React.Component {
       server: {
         error: '',
         message: '',
-        saveStatus: false,
       },
     }
 
@@ -43,14 +44,14 @@ class LoginForm extends React.Component {
       if (this.validate()) return;
 
       // send validated data to the server
-      this.setState({ server: { saveStatus: true } });
+      this.setState({ loading: true });
       Client.loginUser(user, this.successServer, this.errorServer);
-      this.setState({ server: { saveStatus: false } });
     }
 
     // function to handle a successful API operation
     successServer = (message) => {
       this.setState({
+        loading: false,
         server: {
           error: false,
           message,
@@ -61,6 +62,7 @@ class LoginForm extends React.Component {
     // function to handle unsuccessful API operation
     errorServer = (message) => {
       this.setState({
+        loading: false,
         server: {
           error: true,
           message,
@@ -113,11 +115,11 @@ class LoginForm extends React.Component {
                 <div className="text-right">
                   <Button
                     className="btn-auth btn-signin"
-                    disabled={this.validate() && this.state.server.saveStatus}
+                    disabled={this.validate() || this.state.loading}
                     onClick={this.onFormSubmit}
                     color="primary"
                   >
-                      Login
+                    {this.state.loading ? <img alt="loading" src={loading} /> : 'Login'}
                   </Button>
                 </div>
               </Form>
