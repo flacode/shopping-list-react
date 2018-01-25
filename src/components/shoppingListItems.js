@@ -11,7 +11,7 @@ class ItemDashBoard extends Component{
 
     componentDidMount(){
         this.loadItemsFromServer();
-        setInterval(this.loadItemsFromServer, 5000)
+        this.timer = setInterval(this.loadItemsFromServer, 5000)
     }
 
     loadItemsFromServer = () => {
@@ -23,6 +23,11 @@ class ItemDashBoard extends Component{
         this.setState({
             items,
         });
+    }
+
+    // prevent memory leaks incase of many nested timers so that only one timer exists at a time.
+    componentWillUnmount(){
+        clearInterval(this.timer);
     }
 
     handleCreateItem = (item) => {
@@ -55,32 +60,30 @@ class ItemDashBoard extends Component{
     }
 }
 
-class ItemTable extends Component {
-    render(){
-        const rows = this.props.items.map((item) => {
-            return (
-                <ItemRow
-                    item={item} 
-                    key={item.id.toString()} 
-                    handleDelete={this.props.handleDeleteRow}
-                    handleUpdate={this.props.handleUpdateRow}
-                />
-            );
-        });
+const ItemTable = (props) => {
+    const rows = props.items.map((item) => {
         return (
-            <Table>
-                <thead>
-                    <tr>
-                        <TableHeading heading="Name"/>
-                        <TableHeading heading="Quantity"/>
-                        <TableHeading heading="From"/>
-                        <TableHeading heading="Status"/>
-                    </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </Table>
+            <ItemRow
+                item={item} 
+                key={item.id.toString()} 
+                handleDelete={props.handleDeleteRow}
+                handleUpdate={props.handleUpdateRow}
+            />
         );
-    }
+    });
+    return (
+        <Table>
+            <thead>
+                <tr>
+                    <TableHeading heading="Name"/>
+                    <TableHeading heading="Quantity"/>
+                    <TableHeading heading="From"/>
+                    <TableHeading heading="Status"/>
+                </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+        </Table>
+    );
 }
 
 ItemTable.propTypes = {
@@ -123,29 +126,23 @@ ItemRow.propTypes = {
 }
 
 class ToggleableItemForm extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            isOpen: false
-        }
-        this.handleAddClick=this.handleAddClick.bind(this);
-        this.handleFormClose=this.handleFormClose.bind(this);
-        this.handleFormSubmit=this.handleFormSubmit.bind(this);
-    }
+    state = {
+        isOpen: false
+    };
 
-    handleAddClick(){
+    handleAddClick = () => {
         this.setState({
             isOpen: true
         });
     }
 
-    handleFormClose(){
+    handleFormClose = () => {
         this.setState({
             isOpen: false
         });
     }
 
-    handleFormSubmit(item){
+    handleFormSubmit = (item) =>{
         if (item.name === ''){
             // will return error message here
             console.log("Item name provided")
