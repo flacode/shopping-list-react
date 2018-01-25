@@ -18,9 +18,9 @@ class Field extends Component {
 
     // method to accept and validate user input, update state and call parent event handler
     onChange = (event) => {
-        const name = this.props.name;
-        const value = event.target.value;
-        const error = this.props.validate ? this.props.validate(value) : false;
+      const name = this.props.name;
+      const value = event.target.value;
+      const error = this.props.validate ? this.props.validate(value) : false;
 
       this.setState({
         value,
@@ -48,18 +48,18 @@ class Field extends Component {
 }
 
 Field.propTypes = {
-    label: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string,
-    value: PropTypes.string,
-    validate: PropTypes.func,
-    onChange: PropTypes.func.isRequired,
-}
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  value: PropTypes.string,
+  validate: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
+};
 
 Field.defaultProps = {
-    type: null,
-    value: null,
-    validate: null,
-}
+  type: null,
+  value: null,
+  validate: null,
+};
 
-export default Field; 
+export default Field;

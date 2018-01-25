@@ -106,11 +106,11 @@ ItemForm.propTypes = {
 };
 
 ItemForm.defaultProps = {
-    // submitText: null,
-    name: null,
-    quantity: null,
-    bought_from: null,
-    status: false,
+  // submitText: null,
+  name: null,
+  quantity: null,
+  bought_from: null,
+  status: false,
 };
 
 export default ItemForm;
