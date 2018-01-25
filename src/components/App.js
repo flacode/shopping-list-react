@@ -11,7 +11,7 @@ const App = () => (
       <Route path="/register" component={RegistrationForm} />
       <Route path="/login" component={LoginForm} />
       <Route exact path="/shoppinglist/items" component={ItemDashBoard} />
-      <Route path="/shoppinglist" component={ShoppingListDashboard} />
+      <Route path="/shoppinglists" component={ShoppingListDashboard} />
     </Switch>
   </div>
 );

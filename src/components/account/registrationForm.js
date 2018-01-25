@@ -10,7 +10,6 @@ import {
   CardBody,
   CardTitle,
   CardImg,
-  CardSubtitle,
 } from 'reactstrap';
 import validator from 'validator';
 import Field from '../field';
@@ -30,7 +29,7 @@ class RegistrationForm extends Component {
       server: {
         error: '',
         message: '',
-        _saveStatus: false,
+        saveStatus: false,
       },
     }
 
@@ -87,7 +86,7 @@ class RegistrationForm extends Component {
       });
     }
 
-      // function to handle unsuccessful API Ooperation
+      // function to handle unsuccessful API operation
       errorServer = (message) => {
         this.setState({
           server: {
@@ -118,14 +117,14 @@ class RegistrationForm extends Component {
         // TODO: send the successful registration message through login redirect
           <Container>
             {
-                    // check if there are no server errors then redirect to login
-                    this.state.server.error === false ? <Redirect to="/login" /> : null
-                }
+              // check if there are no server errors then redirect to login
+              this.state.server.error === false ? <Redirect to="/login" /> : null
+            }
             <Card className="card-container">
               <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>
               <CardImg className="img-card" src={logo} alt="Card image cap" />
-              <CardSubtitle className="name-card">Sign up</CardSubtitle>
               <CardBody>
+                <h3 className="name-card">Sign up</h3>
                 {this.state.server.error && <Alert color="danger">{this.state.server.message}</Alert> }
                 <Form className="form-signin">
                   <FormGroup>
@@ -184,8 +183,8 @@ class RegistrationForm extends Component {
                     * avoid submitting invalid data
                 */ }
                   <Button
-                    className="btn-signin"
-                    disabled={this.validate() || this.state.server.saveStatus}
+                    className="btn-auth"
+                    disabled={this.validate() && this.state.server.saveStatus}
                     onClick={this.onFormSubmit}
                     color="primary"
                     block
@@ -193,7 +192,7 @@ class RegistrationForm extends Component {
                             Submit
                   </Button>{' '}
                   <Button
-                    className="btn-signin"
+                    className="btn-auth"
                     onClick={this.onFormReset}
                     color="secondary"
                     block
@@ -202,7 +201,7 @@ class RegistrationForm extends Component {
                   </Button>
                 </Form>
                 <p className="login">
-                        Already have an account, please <Link to="/login" className="login-link">login</Link>.
+                        Already have an account, please <Link to="/login" className="auth-link">login</Link>.
                 </p>
               </CardBody>
             </Card>
