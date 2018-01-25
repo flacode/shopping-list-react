@@ -1,8 +1,7 @@
 /* shopping list component to display shopping lists in a table */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import TableHeading from './tableHeading';
-import { Table, Glyphicon } from 'react-bootstrap';
+import TableHeading from '../tableHeading';
 import ShoppingListForm from './shoppingListForm';
 
 class ShoppingListDashboard extends Component {
@@ -26,6 +25,10 @@ class ShoppingListDashboard extends Component {
         this.setState({
             shoppingLists,
         });
+    }
+
+    componentWillUnmount(){
+        clearInterval(this.timer);
     }
 
     handleCreateShoppingList = (shoppingList) => {
@@ -71,7 +74,7 @@ const ShoppingListTable = (props) => {
         );
     });
     return (
-        <Table> 
+        <table> 
             <thead>
                 <tr>
                     <TableHeading heading="Name"/>
@@ -79,7 +82,7 @@ const ShoppingListTable = (props) => {
                 </tr>
             </thead>
             <tbody>{rows}</tbody>
-        </Table>
+        </table>
     );
 }
 
@@ -105,9 +108,9 @@ class ShoppingListRow extends Component {
                 <td>{shoppingList.name}</td>
                 <td>{shoppingList.due_date}</td>
                 <td colSpan={2}>
-                    <button><Glyphicon glyph="eye-open"/> View</button>
-                    <button onClick={this.onClickUpdate}><Glyphicon glyph="edit"/> Update</button>
-                    <button onClick={this.onClickDelete}><Glyphicon glyph="remove"/> Delete</button>
+                    <button> View</button>
+                    <button onClick={this.onClickUpdate}>Update</button>
+                    <button onClick={this.onClickDelete}>Delete</button>
                 </td>
             </tr>
         );
@@ -160,7 +163,7 @@ class ToggleableShoppingListForm extends Component {
             );
         } else {
             return(
-                <button type="button" onClick={this.handleAddClick}><Glyphicon glyph="plus"/></button>
+                <button type="button" onClick={this.handleAddClick}></button>
             );
         }
     }

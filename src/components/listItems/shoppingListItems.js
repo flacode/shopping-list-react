@@ -1,8 +1,8 @@
 /* Item component to display items in a shopping list in a table */
 import React, { Component } from 'react';
-import { Table } from 'react-bootstrap';
+// import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import TableHeading from './tableHeading';
+import TableHeading from '../tableHeading';
 import ItemForm from './shoppingListItemForm'
 class ItemDashBoard extends Component{
     state = {
@@ -72,7 +72,7 @@ const ItemTable = (props) => {
         );
     });
     return (
-        <Table>
+        <table>
             <thead>
                 <tr>
                     <TableHeading heading="Name"/>
@@ -82,7 +82,7 @@ const ItemTable = (props) => {
                 </tr>
             </thead>
             <tbody>{rows}</tbody>
-        </Table>
+        </table>
     );
 }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Field from './field.js';
+import Field from '../field.js';
 
 class LoginForm extends Component {
     state = {
