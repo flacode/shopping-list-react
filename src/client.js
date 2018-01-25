@@ -16,11 +16,9 @@ const registerUser = (user, success, message) => {
       // handle API generated errors
       if (error.response) {
         message(error.response.data.message);
-        console.log(`Server error: ${error.response.data.message}`);
       } else {
         // handle network server errors
         message('Network error, please try again later');
-        console.log(error);
       }
     });
 };

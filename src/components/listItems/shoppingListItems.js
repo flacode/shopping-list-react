@@ -3,188 +3,97 @@ import React, { Component } from 'react';
 // import { Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import TableHeading from '../tableHeading';
-import ItemForm from './shoppingListItemForm'
-class ItemDashBoard extends Component{
+import ItemRow from './itemRow';
+import ToggleableItemForm from './toggleForm';
+
+class ItemDashBoard extends Component {
     state = {
-        items: []
+      items: [],
     };
 
-    componentDidMount(){
-        this.loadItemsFromServer();
-        this.timer = setInterval(this.loadItemsFromServer, 5000)
+    componentDidMount() {
+      this.loadItemsFromServer();
+      setInterval(this.loadItemsFromServer, 5000);
     }
 
     loadItemsFromServer = () => {
-        const items = [
-            {"name": "rice", "id": "1", "bought_from": "supermarket", "quantity": "5", "status": "false"},
-            {"name": "plates", "id": "2", "bought_from": "supermarket", "quantity": "2", "status": "false"},
-            {"name": "matooke", "id": "3", "bought_from": "market", "quantity": "6", "status": "true"}
-          ]
-        this.setState({
-            items,
-        });
-    }
-
-    // prevent memory leaks incase of many nested timers so that only one timer exists at a time.
-    componentWillUnmount(){
-        clearInterval(this.timer);
+      const items = [
+        {
+          name: 'rice', id: '1', bought_from: 'supermarket', quantity: '5', status: 'false',
+        },
+        {
+          name: 'plates', id: '2', bought_from: 'supermarket', quantity: '2', status: 'false',
+        },
+        {
+          name: 'matooke', id: '3', bought_from: 'market', quantity: '6', status: 'true',
+        },
+      ];
+      this.setState({
+        items,
+      });
     }
 
     handleCreateItem = (item) => {
-        item.id=Math.floor((Math.random() * 100) + 1);
-        const newItems = this.state.items.concat(item);
-        this.setState({
-            items: newItems,
-        })
+      item.id = Math.floor((Math.random() * 100) + 1);
+      const newItems = this.state.items.concat(item);
+      this.setState({
+        items: newItems,
+      });
     }
 
     handleDeleteItem = (itemId) => {
-        console.log('item to be deleted '+ itemId)
+      // TODO: For debugging purposes
+      console.log(`item to be deleted ${itemId}`);
     }
 
     handleUpdateItem = (itemId) => {
-        console.log('Id for item to be updated '+ itemId)
+      // TODO: For debugging purposes
+      console.log(`Id for item to be updated ${itemId}`);
     }
 
-    render(){
-        return(
-            <div>
-                <ItemTable
-                    items={this.state.items}
-                    handleDeleteRow={this.handleDeleteItem}
-                    handleUpdateRow={this.handleUpdateItem}
-                />
-                <ToggleableItemForm onFormSubmit={this.handleCreateItem} />
-            </div>
-        )
+    render() {
+      return (
+        <div>
+          <ItemTable
+            items={this.state.items}
+            handleDeleteRow={this.handleDeleteItem}
+            handleUpdateRow={this.handleUpdateItem}
+          />
+          <ToggleableItemForm onFormSubmit={this.handleCreateItem} />
+        </div>
+      );
     }
 }
 
 const ItemTable = (props) => {
-    const rows = props.items.map((item) => {
-        return (
-            <ItemRow
-                item={item} 
-                key={item.id.toString()} 
-                handleDelete={props.handleDeleteRow}
-                handleUpdate={props.handleUpdateRow}
-            />
-        );
-    });
-    return (
-        <table>
-            <thead>
-                <tr>
-                    <TableHeading heading="Name"/>
-                    <TableHeading heading="Quantity"/>
-                    <TableHeading heading="From"/>
-                    <TableHeading heading="Status"/>
-                </tr>
-            </thead>
-            <tbody>{rows}</tbody>
-        </table>
-    );
-}
+  const rows = props.items.map(item => (
+    <ItemRow
+      item={item}
+      key={item.id.toString()}
+      handleDelete={props.handleDeleteRow}
+      handleUpdate={props.handleUpdateRow}
+    />
+  ));
+  return (
+    <table>
+      <thead>
+        <tr>
+          <TableHeading heading="Name" />
+          <TableHeading heading="Quantity" />
+          <TableHeading heading="From" />
+          <TableHeading heading="Status" />
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+  );
+};
 
 ItemTable.propTypes = {
-    items: PropTypes.array.isRequired,
-    handleDeleteRow: PropTypes.func.isRequired,
-    handleUpdateRow: PropTypes.func.isRequired,
-}
 
-class ItemRow extends Component {
-    onClickUpdate = () => {
-        // item object to update-redirect to edit form
-        this.props.handleUpdate(this.props.item);
-    }
-    onClickDelete = () => {
-        this.props.handleDelete(this.props.item.id);
-    }
-
-    render(){
-        const item = this.props.item;
-        return (
-            <tr>
-                <td>{item.name}</td>
-                <td>{item.quantity}</td>
-                <td>{item.bought_from}</td>
-                <td>{item.status}</td>
-                <td>
-                    <button>View</button>
-                    <button onClick={this.onClickUpdate}>Update</button>
-                    <button onClick={this.onClickDelete}>Delete</button>
-                </td>
-            </tr>
-        );
-    }
-}
-
-ItemRow.propTypes = {
-    item: PropTypes.object.isRequired,
-    handleDelete: PropTypes.func.isRequired,
-    handleUpdate: PropTypes.func.isRequired,
-}
-
-class ToggleableItemForm extends Component{
-    state = {
-        isOpen: false
-    };
-
-    handleAddClick = () => {
-        this.setState({
-            isOpen: true
-        });
-    }
-
-    handleFormClose = () => {
-        this.setState({
-            isOpen: false
-        });
-    }
-
-    handleFormSubmit = (item) =>{
-        if (item.name === ''){
-            // will return error message here
-            console.log("Item name provided")
-            return
-        }
-        if (item.quantity === ''){
-            // will return error message here
-            console.log("No quantity provided")
-            return
-        }
-        if (item.bought_from === ''){
-            // will return error message here
-            console.log("No bought from provided")
-            return
-        }
-        if (item.status === ''){
-            // will return error message here
-            console.log("No status provided")
-            return
-        }
-        
-        this.props.onFormSubmit(item);
-        this.setState({
-           isOpen: false 
-        });
-    }
-
-    render(){
-        if (this.state.isOpen){
-            return(
-                <ItemForm onFormClose={this.handleFormClose} onFormSubmit={this.handleFormSubmit}/>
-            );
-        } else {
-            return(
-                <button type='button' onClick={this.handleAddClick}>Add</button>
-            );
-        }
-    }
-}
-
-ToggleableItemForm.propTypes = {
-    onFormSubmit: PropTypes.func.isRequired,
-}
+  items: PropTypes.shape.isRequired,
+  handleDeleteRow: PropTypes.func.isRequired,
+  handleUpdateRow: PropTypes.func.isRequired,
+};
 
 export default ItemDashBoard;

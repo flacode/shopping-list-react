@@ -22,12 +22,10 @@ class Field extends Component {
       const value = event.target.value;
       const error = this.props.validate ? this.props.validate(value) : false;
 
-      this.setState(
-        {
-          value,
-          error,
-        },
-      );
+      this.setState({
+        value,
+        error,
+      });
 
       this.props.onChange({ name, value, error });
     }
@@ -56,6 +54,12 @@ Field.propTypes = {
   value: PropTypes.string,
   validate: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+};
+
+Field.defaultProps = {
+  type: null,
+  value: null,
+  validate: null,
 };
 
 export default Field;
