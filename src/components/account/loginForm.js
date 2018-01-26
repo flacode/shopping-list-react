@@ -1,6 +1,17 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Alert, Card, CardBody, CardTitle, CardImg } from 'reactstrap';
+import Notifications from 'react-notify-toast';
+import {
+  Container,
+  Button,
+  Form,
+  FormGroup,
+  Alert,
+  Card,
+  CardBody,
+  CardTitle,
+  CardImg,
+} from 'reactstrap';
 import Field from '../field';
 import Client from '../../client';
 import '../../App.css';
@@ -11,24 +22,29 @@ class LoginForm extends React.Component {
     state = {
       loading: false,
       fields: {
-        username: '',
-        password: '',
+        username: 'samantha',
+        password: '123456789',
       },
-      fieldErrors: {},
       server: {
         error: '',
         message: '',
       },
     }
 
-    onInputChange = ({ name, value, error }) => {
+    onFormSubmit = (evt) => {
+      evt.preventDefault();
+      const user = this.state.fields;
+
+      // send validated data to the server
+      this.setState({ loading: true });
+      Client.loginUser(user, this.successServer, this.errorServer);
+    }
+
+    handleInputChange = ({ name, value }) => {
       const fields = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
       fields[name] = value;
-      fieldErrors[name] = error;
       this.setState({
         fields,
-        fieldErrors,
         server: {
           error: '',
           message: '',
@@ -36,20 +52,9 @@ class LoginForm extends React.Component {
       });
     }
 
-    onFormSubmit = (evt) => {
-      evt.preventDefault();
-      const user = this.state.fields;
-
-      // validate fields before updating state
-      if (this.validate()) return;
-
-      // send validated data to the server
-      this.setState({ loading: true });
-      Client.loginUser(user, this.successServer, this.errorServer);
-    }
-
     // function to handle a successful API operation
     successServer = (message) => {
+      localStorage.setItem('username', this.state.fields.username);
       this.setState({
         loading: false,
         server: {
@@ -70,18 +75,6 @@ class LoginForm extends React.Component {
       });
     }
 
-    validate = () => {
-      const user = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
-      const serverErrors = this.state.server;
-      const errMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
-      if (!user.username) return true;
-      if (!user.password) return true;
-      if (errMessages.length) return true;
-      if (serverErrors.error) return true;
-      return false;
-    }
-
     render() {
       return (
         <Container>
@@ -93,29 +86,30 @@ class LoginForm extends React.Component {
             <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>
             <CardImg className="img-card" src={logo} alt="Card image cap" />
             <CardBody>
+              <Notifications />
               <h3 className="name-card"> Login</h3>
               {this.state.server.error && <Alert color="danger">{this.state.server.message}</Alert> }
               <Form className="form-signin">
                 <FormGroup>
                   <Field
-                    label="Username or Email"
+                    label="Username"
                     name="username"
                     value={this.state.fields.username}
-                    onChange={this.onInputChange}
+                    onChange={this.handleInputChange}
                   />
                   <Link className="pull-right auth-reset" to="/reset-password">Forgot password?</Link>
                   <Field
-                    label="Password:"
+                    label="Password"
                     name="password"
                     type="password"
                     value={this.state.fields.password}
-                    onChange={this.onInputChange}
+                    onChange={this.handleInputChange}
                   />
                 </FormGroup>
                 <div className="text-right">
                   <Button
                     className="btn-auth btn-signin"
-                    disabled={this.validate() || this.state.loading}
+                    disabled={this.state.server.error || this.state.loading}
                     onClick={this.onFormSubmit}
                     color="primary"
                   >

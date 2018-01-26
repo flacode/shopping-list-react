@@ -11,6 +11,7 @@ import {
   CardTitle,
   CardImg,
 } from 'reactstrap';
+import { notify } from 'react-notify-toast';
 import validator from 'validator';
 import Field from '../field';
 import Client from '../../client';
@@ -82,9 +83,9 @@ class RegistrationForm extends Component {
         loading: false,
         server: {
           error: false,
-          message,
         },
       });
+      notify.show(message, 'success');
     }
 
       // function to handle unsuccessful API operation
@@ -100,15 +101,11 @@ class RegistrationForm extends Component {
 
       // function to validate the form for both field and form errors
       validate = () => {
-        const user = this.state.fields;
         const fieldErrors = this.state.fieldErrors;
         const serverErrors = this.state.server;
-        const errorMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
-        if (!user.username) return true;
-        if (!user.email) return true;
-        if (!user.password) return true;
-        if (!user.confirmPassword) return true;
-        if (errorMessages.length) return true;
+        const errorMessages = Object.keys(fieldErrors).filter(key => fieldErrors[key]);
+        if (!this.state.fields.confirmPassword) return true;
+        if (errorMessages.length > 0) return true;
         if (serverErrors.error) return true;
         return false;
       }
@@ -116,7 +113,6 @@ class RegistrationForm extends Component {
 
       render() {
         return (
-        // TODO: send the successful registration message through login redirect
           <Container>
             {
               // check if there are no server errors then redirect to login
