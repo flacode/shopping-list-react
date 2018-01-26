@@ -1,16 +1,17 @@
 import axios from 'axios/lib/axios';
-// const BASE_URL = "https://deployment-shopping-list-api.herokuapp.com/api";
+
+// const BASE_URL = 'https://deployment-shopping-list-api.herokuapp.com/api';
 const BASE_URL = 'http://127.0.0.1:5000/api';
 let token = null;
 let url;
 
-const handleError = (error, message) => {
+const handleError = (error, errorMessage) => {
   // handle API generated errors
   if (error.response) {
-    message(error.response.data.message);
+    errorMessage(error.response.data.message);
   } else {
     // handle network server errors
-    message('Network error, please try again later');
+    errorMessage('Network error, please try again later');
   }
 };
 
@@ -28,12 +29,34 @@ const loginUser = (user, success, message) => {
   axios.post(url, user)
     .then((response) => {
       token = response.data.access_token;
-      localStorage.setItem('loggedIn', true);
+
+      // update localStorage for logged in user
       return success(response.data.message);
     })
     .catch(error => handleError(error, message));
 };
 
-const Client = { registerUser, loginUser };
+// API call to return shopping lists from the server
+const getShoppingLists = (success, message) => {
+  url = `${BASE_URL}/shoppinglists/`;
+  const config = {
+    headers: { Authorization: token },
+  };
+  axios.get(url, config)
+    .then(response => success(response.data))
+    .catch(error => handleError(error, message));
+};
+
+const isLoggedIn = () => {
+  if (token) return true;
+  return false;
+};
+
+const Client = {
+  registerUser,
+  loginUser,
+  getShoppingLists,
+  isLoggedIn,
+};
 
 export default Client;

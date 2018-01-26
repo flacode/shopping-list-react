@@ -1,7 +1,9 @@
 /* component to toggle shopping list form */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 import ShoppingListForm from './shoppingListForm';
+import '../../App.css';
 
 class ToggleableShoppingListForm extends Component {
     state = {
@@ -44,7 +46,12 @@ class ToggleableShoppingListForm extends Component {
         );
       }
       return (
-        <button type="button" onClick={this.handleAddClick} />
+        <Button
+          className="btn-list btn-auth"
+          onClick={this.handleAddClick}
+        >
+        Create new list
+        </Button>
       );
     }
 }
