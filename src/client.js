@@ -1,4 +1,5 @@
 import axios from 'axios/lib/axios';
+import { notify } from 'react-notify-toast';
 
 // const BASE_URL = 'https://deployment-shopping-list-api.herokuapp.com/api';
 const BASE_URL = 'http://127.0.0.1:5000/api';
@@ -29,6 +30,7 @@ const loginUser = (user, success, message) => {
   axios.post(url, user)
     .then((response) => {
       token = response.data.access_token;
+      localStorage.setItem('token', token);
 
       // update localStorage for logged in user
       return success(response.data.message);
@@ -40,15 +42,26 @@ const loginUser = (user, success, message) => {
 const getShoppingLists = (success, message) => {
   url = `${BASE_URL}/shoppinglists/`;
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: localStorage.getItem('token') },
   };
   axios.get(url, config)
     .then(response => success(response.data))
     .catch(error => handleError(error, message));
 };
 
+// API call to create shopping list
+const createShoppingList = (shoppingList, errorMessage) => {
+  url = `${BASE_URL}/shoppinglists/`;
+  const config = {
+    headers: { Authorization: localStorage.getItem('token') },
+  };
+  axios.post(url, shoppingList, config)
+    .then(response => notify.show(response.data.message, 'success'))
+    .catch(error => handleError(error, errorMessage));
+};
+
 const isLoggedIn = () => {
-  if (token) return true;
+  if (localStorage.getItem('token')) return true;
   return false;
 };
 
@@ -56,6 +69,7 @@ const Client = {
   registerUser,
   loginUser,
   getShoppingLists,
+  createShoppingList,
   isLoggedIn,
 };
 

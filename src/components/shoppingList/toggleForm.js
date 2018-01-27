@@ -7,57 +7,38 @@ import '../../App.css';
 
 class ToggleableShoppingListForm extends Component {
     state = {
-      isOpen: false,
+      modal: false,
     };
 
-    handleAddClick = () => {
+    toggle = () => {
       this.setState({
-        isOpen: true,
-      });
-    }
-
-    handleFormClose = () => {
-      this.setState({
-        isOpen: false,
+        modal: !this.state.modal,
       });
     }
 
     handleFormSubmit = (shoppingList) => {
-      if (shoppingList.name === '') {
-        // will return error message here
-        console.log('No shopping list name provided');
-        return;
-      }
-      if (shoppingList.due_date === '') {
-        // will return error message here
-        console.log('No due date provided');
-        return;
-      }
-      this.props.onFormSubmit(shoppingList);
-      this.setState({
-        isOpen: false,
-      });
+      // pass the shopping list object to the parent component
+      this.props.handleCreate(shoppingList);
     }
 
     render() {
-      if (this.state.isOpen) {
-        return (
-          <ShoppingListForm onFormClose={this.handleFormClose} onFormSubmit={this.handleFormSubmit} />
-        );
-      }
       return (
-        <Button
-          className="btn-list btn-auth"
-          onClick={this.handleAddClick}
-        >
-        Create new list
-        </Button>
+        <div>
+          <Button className="btn-list btn-auth" onClick={this.toggle}>Create new shopping list</Button>
+          <ShoppingListForm
+            openModel={this.state.modal}
+            handleToggle={this.toggle}
+            handleFormSubmitted={this.handleFormSubmit}
+            heading="Create new shopping list"
+            submitText="Create"
+          />
+        </div>
       );
     }
 }
 
 ToggleableShoppingListForm.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
+  handleCreate: PropTypes.func.isRequired,
 };
 
 export default ToggleableShoppingListForm;
