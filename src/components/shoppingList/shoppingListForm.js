@@ -35,11 +35,11 @@ class ShoppingListForm extends Component {
 
     // function to perform client side validation
     validate = () => {
-      const list = this.state.fields;
+      // const list = this.state.fields;
       const fieldErrors = this.state.fieldErrors;
       const errMessages = Object.keys(fieldErrors).filter(key => fieldErrors[key]);
-      if (!list.name) return true;
-      if (!list.due_date) return true;
+      // if (!list.name) return true;
+      // if (!list.due_date) return true;
       if (errMessages.length > 0) return true;
       return false;
     }
@@ -66,7 +66,7 @@ class ShoppingListForm extends Component {
     render() {
       return (
         <div>
-          <Modal isOpen={this.props.openModel} toggle={this.props.handleToggle}>
+          <Modal isOpen={this.props.openModal} toggle={this.props.handleToggle}>
             <ModalHeader className="modal-heading">{this.props.heading}</ModalHeader>
             <ModalBody>
               <Field
@@ -100,7 +100,7 @@ ShoppingListForm.propTypes = {
   handleFormSubmitted: PropTypes.func.isRequired,
   name: PropTypes.string,
   due_date: PropTypes.string,
-  openModel: PropTypes.bool.isRequired,
+  openModal: PropTypes.bool.isRequired,
   handleToggle: PropTypes.func.isRequired,
   heading: PropTypes.string.isRequired,
 };

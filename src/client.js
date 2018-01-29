@@ -9,6 +9,10 @@ let url;
 const handleError = (error, errorMessage) => {
   // handle API generated errors
   if (error.response) {
+    if (error.response.status === 401) {
+      token = null;
+      localStorage.removeItem('token');
+    }
     errorMessage(error.response.data.message);
   } else {
     // handle network server errors
@@ -17,15 +21,15 @@ const handleError = (error, errorMessage) => {
 };
 
 // function to register a user on the API
-const registerUser = (user, success, message) => {
+const registerUser = (user, successMessage, errorMessage) => {
   url = `${BASE_URL}/auth/register`;
   axios.post(url, user)
-    .then(response => success(response.data.message))
-    .catch(error => handleError(error, message));
+    .then(response => successMessage(response.data.message))
+    .catch(error => handleError(error, errorMessage));
 };
 
 // API call to login user and get authentication token.
-const loginUser = (user, success, message) => {
+const loginUser = (user, successMessage, ErrorMessage) => {
   url = `${BASE_URL}/auth/login`;
   axios.post(url, user)
     .then((response) => {
@@ -33,9 +37,9 @@ const loginUser = (user, success, message) => {
       localStorage.setItem('token', token);
 
       // update localStorage for logged in user
-      return success(response.data.message);
+      return successMessage(response.data.message);
     })
-    .catch(error => handleError(error, message));
+    .catch(error => handleError(error, ErrorMessage));
 };
 
 // API call to return shopping lists from the server
@@ -60,6 +64,26 @@ const createShoppingList = (shoppingList, errorMessage) => {
     .catch(error => handleError(error, errorMessage));
 };
 
+const deleteShoppingList = (shoppingListId, errorMessage) => {
+  url = `${BASE_URL}/shoppinglists/${shoppingListId}`;
+  const config = {
+    headers: { Authorization: localStorage.getItem('token') },
+  };
+  axios.delete(url, config)
+    .then(response => notify.show(response.data.message, 'success'))
+    .catch(error => handleError(error, errorMessage));
+};
+
+const updateShoppingList = (shoppingListId, shoppingList, errorMessage) => {
+  url = `${BASE_URL}/shoppinglists/${shoppingListId}`;
+  const config = {
+    headers: { Authorization: localStorage.getItem('token') },
+  };
+  axios.put(url, shoppingList, config)
+    .then(response => notify.show(response.data.message, 'success'))
+    .catch(error => handleError(error, errorMessage));
+};
+
 const isLoggedIn = () => {
   if (localStorage.getItem('token')) return true;
   return false;
@@ -70,6 +94,8 @@ const Client = {
   loginUser,
   getShoppingLists,
   createShoppingList,
+  deleteShoppingList,
+  updateShoppingList,
   isLoggedIn,
 };
 

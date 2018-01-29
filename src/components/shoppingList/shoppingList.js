@@ -1,16 +1,11 @@
 /* shopping list component to display shopping lists in a table */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { Container } from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 import Notifications, { notify } from 'react-notify-toast';
-import TableHeading from '../tableHeading';
-import ShoppingListRow from './listRow';
+import 'font-awesome/css/font-awesome.min.css';
 import Client from '../../client';
 import headerIcon from '../../imgs/header.png';
-import updateIcon from '../../imgs/update.png';
-import deleteIcon from '../../imgs/delete.png';
-
 import ToggleableShoppingListForm from './toggleForm';
 import '../../App.css';
 
@@ -18,14 +13,13 @@ class ShoppingListDashboard extends Component {
     state = {
       shoppingLists: {},
       serverMessage: '',
-      error: false,
     };
 
     componentDidMount() {
       this.loadShoppingListsFromServer();
 
-      // reload list automatically every 5 seconds
-      this.timer = setInterval(this.loadShoppingListsFromServer, 5000);
+      // reload list automatically every 1 minute
+      this.timer = setInterval(this.loadShoppingListsFromServer, 60000);
     }
 
     componentWillUnmount() {
@@ -33,13 +27,12 @@ class ShoppingListDashboard extends Component {
     }
 
     serverError = (message) => {
-      this.setState({ error: message });
       notify.show(message, 'error');
     }
 
     serverData = (data) => {
-      if (data.message) this.setState({ serverMessage: data.message });
-      if (data.shopping_lists) this.setState({ shoppingLists: data.shopping_lists });
+      if (data.message) this.setState({ serverMessage: data.message, shoppingLists: {} });
+      if (data.shopping_lists) this.setState({ serverMessage: '', shoppingLists: data.shopping_lists });
     }
 
     loadShoppingListsFromServer = () => {
@@ -53,19 +46,23 @@ class ShoppingListDashboard extends Component {
     }
 
     handleDeleteShoppingList = (shoppingListId) => {
-      console.log(`shopping list to be deleted ${shoppingListId}`);
+      Client.deleteShoppingList(shoppingListId, this.serverError);
+      this.loadShoppingListsFromServer();
     }
 
-    handleUpdateShoppingList = (shoppingList) => {
-      console.log(`update clicked for shopping list ${shoppingList.id}`);
+    handleUpdateShoppingList = (shoppingListId, shoppingList) => {
+      console.log('Update', shoppingList);
+      Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
+      this.loadShoppingListsFromServer();
     }
 
     render() {
       return (
         <div>
           {
-            this.state.error &&
+            localStorage.getItem('token') === null &&
             <Redirect to="/login" />
+
           }
           <Container className="list-page">
             <div className="panel panel-default">
@@ -91,14 +88,30 @@ class ShoppingListDashboard extends Component {
                           {/* TODO:add link to items in the shopping list */}
                           <h3 className="list-name">{shoppingList.name}</h3>
                           <div className="list-group-item-text">
-                            <span className="list-details">
+
+                            <div className="float-left">
                               Due date: { shoppingList.due_date }
-                            </span>
-                            <span className="action_btn">
-                              <a href="#"><img src={updateIcon} alt="icon for heading" /></a>
-                              {' '}
-                              <a  href="#"><img src={deleteIcon} alt="icon for heading" /></a>
-                            </span>
+                            </div>
+                            <div className="float-right">
+                              <div className="action-btn">
+                                <ToggleableShoppingListForm
+                                  handleForm={updatedList => this.handleUpdateShoppingList(
+                                    shoppingList.id, updatedList,
+                                  )}
+                                  name={shoppingList.name}
+                                  due_date={new Date(shoppingList.due_date).toJSON().slice(0, 10)}
+                                  updateList
+                                />
+                                {' '}
+                                <Button
+                                  className="icon-btn"
+                                  onClick={() => this.handleDeleteShoppingList(shoppingList.id)}
+                                >
+                                  <i className="fa fa-trash" />
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="clear-float" />
                           </div>
                         </li>
                       ),
@@ -106,48 +119,16 @@ class ShoppingListDashboard extends Component {
                   </div>
                     }
                 </div>
-                <ToggleableShoppingListForm handleCreate={this.handleCreateShoppingList} />
+                <ToggleableShoppingListForm
+                  handleForm={this.handleCreateShoppingList}
+                />
               </div>
               <div className="panel-footer site-background">Panel Footer</div>
             </div>
           </Container>
-          {/*
-          <ShoppingListTable
-            shoppingLists={this.state.shoppingLists}
-            handleDeleteRow={this.handleDeleteShoppingList}
-            handleUpdateRow={this.handleUpdateShoppingList}
-          /> */}
         </div>
       );
     }
 }
-
-const ShoppingListTable = (props) => {
-  const rows = props.shoppingLists.map(shoppingList => (
-    <ShoppingListRow
-      shoppingList={shoppingList}
-      key={shoppingList.id.toString()}
-      handleDelete={props.handleDeleteRow}
-      handleUpdate={props.handleUpdateRow}
-    />
-  ));
-  return (
-    <table>
-      <thead>
-        <tr>
-          <TableHeading heading="Name" />
-          <TableHeading heading="Due date" />
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
-  );
-};
-
-ShoppingListTable.propTypes = {
-  shoppingLists: PropTypes.shape.isRequired,
-  handleDeleteRow: PropTypes.func.isRequired,
-  handleUpdateRow: PropTypes.func.isRequired,
-};
 
 export default ShoppingListDashboard;

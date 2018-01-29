@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
+import 'font-awesome/css/font-awesome.min.css';
 import ShoppingListForm from './shoppingListForm';
 import '../../App.css';
 
@@ -18,27 +19,56 @@ class ToggleableShoppingListForm extends Component {
 
     handleFormSubmit = (shoppingList) => {
       // pass the shopping list object to the parent component
-      this.props.handleCreate(shoppingList);
+      this.props.handleForm(shoppingList);
     }
 
     render() {
       return (
         <div>
-          <Button className="btn-list btn-auth" onClick={this.toggle}>Create new shopping list</Button>
-          <ShoppingListForm
-            openModel={this.state.modal}
-            handleToggle={this.toggle}
-            handleFormSubmitted={this.handleFormSubmit}
-            heading="Create new shopping list"
-            submitText="Create"
-          />
+          { this.props.updateList &&
+          <div>
+            <Button className="icon-btn" onClick={this.toggle}>
+              <i className="fa fa-edit fa-1x" />
+            </Button>
+            <ShoppingListForm
+              openModal={this.state.modal}
+              handleToggle={this.toggle}
+              handleFormSubmitted={this.handleFormSubmit}
+              heading="Update shopping list"
+              submitText="Update"
+              name={this.props.name}
+              due_date={this.props.due_date}
+            />
+          </div>
+          }
+          { !this.props.updateList &&
+          <div>
+            <Button className="btn-list btn-auth" onClick={this.toggle}>Create new shopping list</Button>
+            <ShoppingListForm
+              openModal={this.state.modal}
+              handleToggle={this.toggle}
+              handleFormSubmitted={this.handleFormSubmit}
+              heading="Create new shopping list"
+              submitText="Create"
+            />
+          </div>
+          }
         </div>
       );
     }
 }
 
 ToggleableShoppingListForm.propTypes = {
-  handleCreate: PropTypes.func.isRequired,
+  handleForm: PropTypes.func.isRequired,
+  updateList: PropTypes.bool,
+  name: PropTypes.string,
+  due_date: PropTypes.string,
+};
+
+ToggleableShoppingListForm.defaultProps = {
+  updateList: false,
+  name: '',
+  due_date: '',
 };
 
 export default ToggleableShoppingListForm;
