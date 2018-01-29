@@ -22,8 +22,8 @@ class LoginForm extends React.Component {
     state = {
       loading: false,
       fields: {
-        username: 'samantha',
-        password: '123456789',
+        username: '',
+        password: '',
       },
       server: {
         error: '',
