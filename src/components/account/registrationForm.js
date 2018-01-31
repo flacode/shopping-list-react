@@ -11,14 +11,17 @@ import {
   CardTitle,
   CardImg,
 } from 'reactstrap';
+import { notify } from 'react-notify-toast';
 import validator from 'validator';
 import Field from '../field';
 import Client from '../../client';
 import '../../App.css';
 import logo from '../../imgs/shoppinglist.png';
+import loading from '../../imgs/loading.gif';
 
 class RegistrationForm extends Component {
     state = {
+      loading: false,
       fields: {
         username: '',
         email: '',
@@ -29,7 +32,6 @@ class RegistrationForm extends Component {
       server: {
         error: '',
         message: '',
-        saveStatus: false,
       },
     }
 
@@ -71,24 +73,25 @@ class RegistrationForm extends Component {
       if (this.validate()) return;
 
       // send validated data to the server
-      this.setState({ server: { saveStatus: true } });
+      this.setState({ loading: true });
       Client.registerUser(user, this.successServer, this.errorServer);
-      this.setState({ server: { saveStatus: false } });
     }
 
     // function to handle a successful API operation
     successServer = (message) => {
       this.setState({
+        loading: false,
         server: {
           error: false,
-          message,
         },
       });
+      notify.show(message, 'success');
     }
 
       // function to handle unsuccessful API operation
       errorServer = (message) => {
         this.setState({
+          loading: false,
           server: {
             error: true,
             message,
@@ -98,15 +101,11 @@ class RegistrationForm extends Component {
 
       // function to validate the form for both field and form errors
       validate = () => {
-        const user = this.state.fields;
         const fieldErrors = this.state.fieldErrors;
         const serverErrors = this.state.server;
-        const errorMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
-        if (!user.username) return true;
-        if (!user.email) return true;
-        if (!user.password) return true;
-        if (!user.confirmPassword) return true;
-        if (errorMessages.length) return true;
+        const errorMessages = Object.keys(fieldErrors).filter(key => fieldErrors[key]);
+        if (!this.state.fields.confirmPassword) return true;
+        if (errorMessages.length > 0) return true;
         if (serverErrors.error) return true;
         return false;
       }
@@ -114,7 +113,6 @@ class RegistrationForm extends Component {
 
       render() {
         return (
-        // TODO: send the successful registration message through login redirect
           <Container>
             {
               // check if there are no server errors then redirect to login
@@ -182,24 +180,23 @@ class RegistrationForm extends Component {
                     * avoid multiple submissions
                     * avoid submitting invalid data
                 */ }
-                  <Button
-                    className="btn-auth"
-                    disabled={this.validate() && this.state.server.saveStatus}
-                    onClick={this.onFormSubmit}
-                    color="primary"
-                    block
-                  >
-                            Submit
-                  </Button>{' '}
-                  <Button
-                    className="btn-auth"
-                    onClick={this.onFormReset}
-                    color="secondary"
-                    block
-                  >
+                  <div className="btn-center">
+                    <Button
+                      className="btn-auth"
+                      disabled={this.validate() || this.state.loading}
+                      onClick={this.onFormSubmit}
+                    >
+                      { this.state.loading ? <img alt="loading" src={loading} /> : 'Submit'}
+                    </Button>{' '}
+                    <Button
+                      className="btn-auth"
+                      onClick={this.onFormReset}
+                    >
                             Reset
-                  </Button>
+                    </Button>
+                  </div>
                 </Form>
+                <br />
                 <p className="login">
                         Already have an account, please <Link to="/login" className="auth-link">login</Link>.
                 </p>

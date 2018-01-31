@@ -1,56 +1,74 @@
 /* component to toggle shopping list form */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
+import 'font-awesome/css/font-awesome.min.css';
 import ShoppingListForm from './shoppingListForm';
+import '../../App.css';
 
 class ToggleableShoppingListForm extends Component {
     state = {
-      isOpen: false,
+      modal: false,
     };
 
-    handleAddClick = () => {
+    toggle = () => {
       this.setState({
-        isOpen: true,
-      });
-    }
-
-    handleFormClose = () => {
-      this.setState({
-        isOpen: false,
+        modal: !this.state.modal,
       });
     }
 
     handleFormSubmit = (shoppingList) => {
-      if (shoppingList.name === '') {
-        // will return error message here
-        console.log('No shopping list name provided');
-        return;
-      }
-      if (shoppingList.due_date === '') {
-        // will return error message here
-        console.log('No due date provided');
-        return;
-      }
-      this.props.onFormSubmit(shoppingList);
-      this.setState({
-        isOpen: false,
-      });
+      // pass the shopping list object to the parent component
+      this.props.handleForm(shoppingList);
     }
 
     render() {
-      if (this.state.isOpen) {
-        return (
-          <ShoppingListForm onFormClose={this.handleFormClose} onFormSubmit={this.handleFormSubmit} />
-        );
-      }
       return (
-        <button type="button" onClick={this.handleAddClick} />
+        <div>
+          { this.props.updateList &&
+          <div>
+            <Button className="icon-btn" onClick={this.toggle}>
+              <i className="fa fa-edit fa-1x" />
+            </Button>
+            <ShoppingListForm
+              openModal={this.state.modal}
+              handleToggle={this.toggle}
+              handleFormSubmitted={this.handleFormSubmit}
+              heading="Update shopping list"
+              submitText="Update"
+              name={this.props.name}
+              due_date={this.props.due_date}
+            />
+          </div>
+          }
+          { !this.props.updateList &&
+          <div>
+            <Button className="btn-list btn-auth" onClick={this.toggle}>Create new shopping list</Button>
+            <ShoppingListForm
+              openModal={this.state.modal}
+              handleToggle={this.toggle}
+              handleFormSubmitted={this.handleFormSubmit}
+              heading="Create new shopping list"
+              submitText="Create"
+            />
+          </div>
+          }
+        </div>
       );
     }
 }
 
 ToggleableShoppingListForm.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
+  handleForm: PropTypes.func.isRequired,
+  updateList: PropTypes.bool,
+  name: PropTypes.string,
+  due_date: PropTypes.string,
+};
+
+ToggleableShoppingListForm.defaultProps = {
+  updateList: false,
+  name: '',
+  due_date: '',
 };
 
 export default ToggleableShoppingListForm;

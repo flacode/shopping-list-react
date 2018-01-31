@@ -1,33 +1,50 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Container, Button, Form, FormGroup, Alert, Card, CardBody, CardTitle, CardImg } from 'reactstrap';
+import Notifications from 'react-notify-toast';
+import {
+  Container,
+  Button,
+  Form,
+  FormGroup,
+  Alert,
+  Card,
+  CardBody,
+  CardTitle,
+  CardImg,
+} from 'reactstrap';
 import Field from '../field';
 import Client from '../../client';
 import '../../App.css';
 import logo from '../../imgs/shoppinglist.png';
+import loading from '../../imgs/loading.gif';
 
 class LoginForm extends React.Component {
     state = {
+      loading: false,
       fields: {
         username: '',
         password: '',
       },
-      fieldErrors: {},
       server: {
         error: '',
         message: '',
-        saveStatus: false,
       },
     }
 
-    onInputChange = ({ name, value, error }) => {
+    onFormSubmit = (evt) => {
+      evt.preventDefault();
+      const user = this.state.fields;
+
+      // send validated data to the server
+      this.setState({ loading: true });
+      Client.loginUser(user, this.successServer, this.errorServer);
+    }
+
+    handleInputChange = ({ name, value }) => {
       const fields = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
       fields[name] = value;
-      fieldErrors[name] = error;
       this.setState({
         fields,
-        fieldErrors,
         server: {
           error: '',
           message: '',
@@ -35,22 +52,11 @@ class LoginForm extends React.Component {
       });
     }
 
-    onFormSubmit = (evt) => {
-      evt.preventDefault();
-      const user = this.state.fields;
-
-      // validate fields before updating state
-      if (this.validate()) return;
-
-      // send validated data to the server
-      this.setState({ server: { saveStatus: true } });
-      Client.loginUser(user, this.successServer, this.errorServer);
-      this.setState({ server: { saveStatus: false } });
-    }
-
     // function to handle a successful API operation
     successServer = (message) => {
+      localStorage.setItem('username', this.state.fields.username);
       this.setState({
+        loading: false,
         server: {
           error: false,
           message,
@@ -61,23 +67,12 @@ class LoginForm extends React.Component {
     // function to handle unsuccessful API operation
     errorServer = (message) => {
       this.setState({
+        loading: false,
         server: {
           error: true,
           message,
         },
       });
-    }
-
-    validate = () => {
-      const user = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
-      const serverErrors = this.state.server;
-      const errMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
-      if (!user.username) return true;
-      if (!user.password) return true;
-      if (errMessages.length) return true;
-      if (serverErrors.error) return true;
-      return false;
     }
 
     render() {
@@ -91,33 +86,34 @@ class LoginForm extends React.Component {
             <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>
             <CardImg className="img-card" src={logo} alt="Card image cap" />
             <CardBody>
+              <Notifications />
               <h3 className="name-card"> Login</h3>
               {this.state.server.error && <Alert color="danger">{this.state.server.message}</Alert> }
               <Form className="form-signin">
                 <FormGroup>
                   <Field
-                    label="Username or Email"
+                    label="Username"
                     name="username"
                     value={this.state.fields.username}
-                    onChange={this.onInputChange}
+                    onChange={this.handleInputChange}
                   />
                   <Link className="pull-right auth-reset" to="/reset-password">Forgot password?</Link>
                   <Field
-                    label="Password:"
+                    label="Password"
                     name="password"
                     type="password"
                     value={this.state.fields.password}
-                    onChange={this.onInputChange}
+                    onChange={this.handleInputChange}
                   />
                 </FormGroup>
                 <div className="text-right">
                   <Button
                     className="btn-auth btn-signin"
-                    disabled={this.validate() && this.state.server.saveStatus}
+                    disabled={this.state.server.error || this.state.loading}
                     onClick={this.onFormSubmit}
                     color="primary"
                   >
-                      Login
+                    {this.state.loading ? <img alt="loading" src={loading} /> : 'Login'}
                   </Button>
                 </div>
               </Form>

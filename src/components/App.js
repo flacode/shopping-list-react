@@ -8,6 +8,7 @@ import LoginForm from './account/loginForm';
 const App = () => (
   <div>
     <Switch>
+      <Route exact path="/" component={RegistrationForm} />
       <Route path="/register" component={RegistrationForm} />
       <Route path="/login" component={LoginForm} />
       <Route exact path="/shoppinglist/items" component={ItemDashBoard} />

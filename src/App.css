@@ -1,8 +1,6 @@
 body,
 html {
     height: 100%;
-    /* background-repeat: no-repeat;
-    background-image: radial-gradient(rgb(247, 159, 44), rgb(34, 180, 158)); */
     font-size: 16px;
 }
 
@@ -67,9 +65,7 @@ html {
 }
 
 .btn.btn-auth {
-  /*background-color: #4d90fe; */
   background-color: rgb(34, 180, 158);
-  /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
   padding: 0px;
   font-weight: 550;
   font-size: 20px;
@@ -82,6 +78,7 @@ html {
   -moz-transition: all 0.218s;
   -webkit-transition: all 0.218s;
   transition: all 0.218s;
+  width: 110px;
 }
 
 .btn.btn-auth:hover,
@@ -103,10 +100,85 @@ html {
   color: rgb(34, 180, 158)
 }
 
-.auth-reset{
+.auth-reset {
   font-size: 13px;
 }
+
+.btn-center {
+  margin:auto;
+  display:block;
+  text-align:center;
+}
+
+.list-page {
+  margin-top: 15px;
+}
+
+.panel-body{
+  height: 100%;
+  background-color: #F7F7F7;
+  min-height: 80vh;
+}
+
+.page-heading {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: left;
+    min-height: 1em;
+    vertical-align: middle; 
+}
+
+.panel-heading.site-background,
+.panel-footer.site-background,
+.modal-heading {
+  background-color: rgb(34, 180, 158);
+  color: #F7F7F7
+}
+
+.list-group {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 70%; margin-right: auto; margin-left: auto; height: auto;
+}
+
+.list-name {
+  color: rgb(34, 180, 158);
+}
+
+.btn-list {
+  width: 250px !important;
+  margin:auto;
+  display:block;
+}
+
+.list-details {
+  text-align: left;
+}
+
 /* center a button{
   margin:auto;
   display:block;
 }*/
+
+.action-btn *{
+  display:inline;
+  margin: auto;
+}
+
+.float-left{
+  float: left
+}
+
+.float-right{
+  float: right;
+}
+
+.clear-float{
+  clear: both;
+}
+
+.icon-btn {
+  background-color: rgb(34, 180, 158);
+  color: #F7F7F7;
+  border-color: rgb(34, 180, 158);
+}

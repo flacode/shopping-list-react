@@ -17,7 +17,7 @@ class Field extends Component {
     }
 
     // method to accept and validate user input, update state and call parent event handler
-    onChange = (event) => {
+    fieldChange = (event) => {
       const name = this.props.name;
       const value = event.target.value;
       const error = this.props.validate ? this.props.validate(value) : false;
@@ -38,7 +38,7 @@ class Field extends Component {
             value={this.state.value}
             placeholder={this.props.label}
             type={this.props.type}
-            onChange={this.onChange}
+            onChange={this.fieldChange}
             valid={this.state.error ? false : null}
           />
           <FormFeedback>{this.state.error}</FormFeedback>
