@@ -1,6 +1,6 @@
 /* shopping list component to display shopping lists in a table */
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { Container, Button } from 'reactstrap';
 import Notifications, { notify } from 'react-notify-toast';
 import 'font-awesome/css/font-awesome.min.css';
@@ -11,7 +11,7 @@ import '../../App.css';
 
 class ShoppingListDashboard extends Component {
     state = {
-      shoppingLists: {},
+      shoppingLists: [],
       serverMessage: '',
     };
 
@@ -31,7 +31,7 @@ class ShoppingListDashboard extends Component {
     }
 
     serverData = (data) => {
-      if (data.message) this.setState({ serverMessage: data.message, shoppingLists: {} });
+      if (data.message) this.setState({ serverMessage: data.message, shoppingLists: [] });
       if (data.shopping_lists) this.setState({ serverMessage: '', shoppingLists: data.shopping_lists });
     }
 
@@ -39,7 +39,6 @@ class ShoppingListDashboard extends Component {
       Client.getShoppingLists(this.serverData, this.serverError);
     }
 
-    // i need to get the server errors and display them
     handleCreateShoppingList = (shoppingList) => {
       Client.createShoppingList(shoppingList, this.serverError);
       this.loadShoppingListsFromServer();
@@ -51,7 +50,6 @@ class ShoppingListDashboard extends Component {
     }
 
     handleUpdateShoppingList = (shoppingListId, shoppingList) => {
-      console.log('Update', shoppingList);
       Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
       this.loadShoppingListsFromServer();
     }
@@ -85,7 +83,6 @@ class ShoppingListDashboard extends Component {
                     { this.state.shoppingLists.map(shoppingList =>
                       (
                         <li key={shoppingList.id} className="list-group-item">
-                          {/* TODO:add link to items in the shopping list */}
                           <h3 className="list-name">{shoppingList.name}</h3>
                           <div className="list-group-item-text">
 
@@ -94,6 +91,12 @@ class ShoppingListDashboard extends Component {
                             </div>
                             <div className="float-right">
                               <div className="action-btn">
+                                <Link to={`/shoppinglist/${shoppingList.id}/items`} className="link-btn">
+                                  <Button className="icon-btn">
+                                    <i className="fa fa-eye" />
+                                  </Button>
+                                </Link>
+                                {' '}
                                 <ToggleableShoppingListForm
                                   handleForm={updatedList => this.handleUpdateShoppingList(
                                     shoppingList.id, updatedList,
@@ -123,7 +126,7 @@ class ShoppingListDashboard extends Component {
                   handleForm={this.handleCreateShoppingList}
                 />
               </div>
-              <div className="panel-footer site-background">Panel Footer</div>
+              <div className="panel-footer site-background">@flacode</div>
             </div>
           </Container>
         </div>

@@ -1,99 +1,142 @@
 /* Item component to display items in a shopping list in a table */
 import React, { Component } from 'react';
-// import { Table } from 'react-bootstrap';
+import { Container, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
-import TableHeading from '../tableHeading';
-import ItemRow from './itemRow';
+import { Redirect } from 'react-router-dom';
+import Notifications, { notify } from 'react-notify-toast';
+import headerIcon from '../../imgs/header.png';
 import ToggleableItemForm from './toggleForm';
+import Client from '../../client';
 
 class ItemDashBoard extends Component {
-    state = {
+  constructor(props) {
+    super(props);
+    this.state = {
       items: [],
+      serverMessage: '',
     };
+    this.listId = '';
+  }
 
-    componentDidMount() {
-      this.loadItemsFromServer();
-      setInterval(this.loadItemsFromServer, 5000);
+  componentDidMount() {
+    const { match: { params } } = this.props;
+    this.listId = params.listId;
+    this.loadItemsFromServer();
+
+    // reload list automatically every 1 minute
+    this.timer = setInterval(this.loadShoppingListsFromServer, 60000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+    serverError = (message) => {
+      notify.show(message, 'error');
+    }
+
+    serverData = (data) => {
+      if (data.message) this.setState({ serverMessage: data.message, items: [] });
+      if (data.Items) this.setState({ serverMessage: '', items: data.Items });
     }
 
     loadItemsFromServer = () => {
-      const items = [
-        {
-          name: 'rice', id: '1', bought_from: 'supermarket', quantity: '5', status: 'false',
-        },
-        {
-          name: 'plates', id: '2', bought_from: 'supermarket', quantity: '2', status: 'false',
-        },
-        {
-          name: 'matooke', id: '3', bought_from: 'market', quantity: '6', status: 'true',
-        },
-      ];
-      this.setState({
-        items,
-      });
+      Client.getItems(this.listId, this.serverData, this.serverError);
     }
 
     handleCreateItem = (item) => {
-      item.id = Math.floor((Math.random() * 100) + 1);
-      const newItems = this.state.items.concat(item);
-      this.setState({
-        items: newItems,
-      });
+      Client.addItems(this.listId, item, this.serverError);
+      this.loadItemsFromServer();
     }
 
     handleDeleteItem = (itemId) => {
-      // TODO: For debugging purposes
-      console.log(`item to be deleted ${itemId}`);
+      Client.deleteItems(this.listId, itemId, this.serverError);
+      this.loadItemsFromServer();
     }
 
-    handleUpdateItem = (itemId) => {
-      // TODO: For debugging purposes
-      console.log(`Id for item to be updated ${itemId}`);
+    handleUpdateItem = (itemId, item) => {
+      Client.updateItems(this.listId, itemId, item, this.serverError);
+      this.loadItemsFromServer();
     }
 
     render() {
       return (
         <div>
-          <ItemTable
-            items={this.state.items}
-            handleDeleteRow={this.handleDeleteItem}
-            handleUpdateRow={this.handleUpdateItem}
-          />
-          <ToggleableItemForm onFormSubmit={this.handleCreateItem} />
+          {
+            localStorage.getItem('token') === null &&
+            <Redirect to="/login" />
+
+          }
+          <Container className="list-page">
+            <div className="panel panel-default">
+              <div className="panel-heading site-background">
+                <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
+                <span className="pull-right">
+                  {localStorage.getItem('username')} <span className="glyphicon glyphicon-log-out" />
+                </span>
+              </div>
+              <div className="panel-body">
+                <Notifications />
+                <div className="list-group">
+                  { this.state.items.length <= 0 ?
+                    <li className="list-group-item">
+                      <p> {this.state.serverMessage} </p>
+                    </li> :
+                    this.state.items.map(item => (
+                      <li key={item.id} className="list-group-item">
+                        <div className="float-left">
+                          { item.status ?
+                            <s className="label-text"><h3 className="list-name">{item.name}</h3></s> :
+                            <h3 className="list-name">{item.name}</h3>
+                          }
+                        </div>
+                        <div className="float-right">
+                          <div className="action-btn">
+                            <Button
+                              className="icon-btn"
+                            >
+                              <i className="fa fa-eye" />
+                            </Button>
+                            { ' '}
+                            <ToggleableItemForm
+                              handleForm={updatedItem => this.handleUpdateItem(item.id, updatedItem)}
+                              name={item.name}
+                              quantity={item.quantity}
+                              status={item.status}
+                              bought_from={item.bought_from}
+                              updateItem
+                            />
+                            {' '}
+                            <Button
+                              className="icon-btn"
+                              onClick={() => this.handleDeleteItem(item.id)}
+                            >
+                              <i className="fa fa-trash" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="clear-float" />
+                      </li>
+                    ),
+                  )
+                  }
+                </div>
+                <ToggleableItemForm handleForm={this.handleCreateItem} />
+              </div>
+              <div className="panel-footer site-background">@flacode</div>
+            </div>
+          </Container>
         </div>
       );
     }
 }
 
-const ItemTable = (props) => {
-  const rows = props.items.map(item => (
-    <ItemRow
-      item={item}
-      key={item.id.toString()}
-      handleDelete={props.handleDeleteRow}
-      handleUpdate={props.handleUpdateRow}
-    />
-  ));
-  return (
-    <table>
-      <thead>
-        <tr>
-          <TableHeading heading="Name" />
-          <TableHeading heading="Quantity" />
-          <TableHeading heading="From" />
-          <TableHeading heading="Status" />
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
-  );
-};
-
-ItemTable.propTypes = {
-
-  items: PropTypes.shape.isRequired,
-  handleDeleteRow: PropTypes.func.isRequired,
-  handleUpdateRow: PropTypes.func.isRequired,
+ItemDashBoard.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      listId: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default ItemDashBoard;

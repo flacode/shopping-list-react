@@ -31,8 +31,8 @@ class LoginForm extends React.Component {
       },
     }
 
-    onFormSubmit = (evt) => {
-      evt.preventDefault();
+    onFormSubmit = (event) => {
+      event.preventDefault();
       const user = this.state.fields;
 
       // send validated data to the server

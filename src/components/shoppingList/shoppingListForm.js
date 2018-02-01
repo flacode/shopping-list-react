@@ -48,7 +48,8 @@ class ShoppingListForm extends Component {
      * Sends data to a function from props
      * Toggle the form to close it
     */
-    handleFormSubmit = () => {
+    handleFormSubmit = (event) => {
+      event.preventDefault();
       if (this.validate()) return;
       this.props.handleFormSubmitted({
         name: this.state.fields.name,
@@ -74,6 +75,7 @@ class ShoppingListForm extends Component {
                 name="name"
                 value={this.state.fields.name}
                 onChange={this.handleInputChange}
+                labels
               />
               <br />
               <Field
@@ -82,6 +84,7 @@ class ShoppingListForm extends Component {
                 type="date"
                 value={this.state.fields.due_date}
                 onChange={this.handleInputChange}
+                labels
                 validate={val => (validator.isAfter(val) ? false : 'Date should not be before today.')}
               />
             </ModalBody>

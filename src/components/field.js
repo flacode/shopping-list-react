@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, FormFeedback } from 'reactstrap';
+import { Input, FormFeedback, Label } from 'reactstrap';
+import '../App.css';
 
 // component for validation of individual form fields
 class Field extends Component {
@@ -33,14 +34,34 @@ class Field extends Component {
     render() {
       return (
         <div>
-          <Input
-            name={this.props.name}
-            value={this.state.value}
-            placeholder={this.props.label}
-            type={this.props.type}
-            onChange={this.fieldChange}
-            valid={this.state.error ? false : null}
-          />
+          { this.props.labels ?
+            <div className="row">
+              <div className="col-sm-5">
+                <Label for={this.props.name} className="label-text">
+                  {this.props.label}:
+                </Label>
+              </div>
+              <div className="col-sm-7">
+                <Input
+                  id={this.props.name}
+                  name={this.props.name}
+                  value={this.state.value}
+                  type={this.props.type}
+                  onChange={this.fieldChange}
+                  valid={this.state.error ? false : null}
+                />
+                { this.state.error && <div className="form-error">{this.state.error}</div>}
+              </div>
+            </div> :
+            <Input
+              name={this.props.name}
+              value={this.state.value}
+              placeholder={this.props.label}
+              type={this.props.type}
+              onChange={this.fieldChange}
+              valid={this.state.error ? false : null}
+            />
+          }
           <FormFeedback>{this.state.error}</FormFeedback>
         </div>
       );
@@ -51,15 +72,20 @@ Field.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   validate: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+  labels: PropTypes.bool,
 };
 
 Field.defaultProps = {
-  type: null,
-  value: null,
+  type: '',
+  value: '',
   validate: null,
+  labels: false,
 };
 
 export default Field;

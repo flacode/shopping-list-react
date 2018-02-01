@@ -52,8 +52,8 @@ class RegistrationForm extends Component {
     }
 
     // function to clear the form fields on reset
-    onFormReset = (evt) => {
-      evt.preventDefault();
+    onFormReset = (event) => {
+      event.preventDefault();
       this.setState({
         fields: {
           username: '',

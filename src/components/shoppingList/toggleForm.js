@@ -28,7 +28,7 @@ class ToggleableShoppingListForm extends Component {
           { this.props.updateList &&
           <div>
             <Button className="icon-btn" onClick={this.toggle}>
-              <i className="fa fa-edit fa-1x" />
+              <i className="fa fa-edit" />
             </Button>
             <ShoppingListForm
               openModal={this.state.modal}

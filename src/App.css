@@ -182,3 +182,18 @@ html {
   color: #F7F7F7;
   border-color: rgb(34, 180, 158);
 }
+
+.link-btn:visited,
+.link-btn:hover,
+.link-btn:active {
+  text-decoration: none;
+}
+
+.label-text {
+  color: rgb(103, 132, 143);
+}
+
+.form-error {
+  color: red;
+  font-size: 15px;
+}
