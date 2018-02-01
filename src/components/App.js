@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import ShoppingListDashboard from './shoppingList/shoppingList';
 import ItemDashBoard from './listItems/shoppingListItems';
 import RegistrationForm from './account/registrationForm';
@@ -17,4 +17,4 @@ const App = () => (
   </div>
 );
 
-export default App;
+export default withRouter(App);

@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Container, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import Notifications, { notify } from 'react-notify-toast';
 import headerIcon from '../../imgs/header.png';
 import ToggleableItemForm from './toggleForm';
@@ -31,8 +30,10 @@ class ItemDashBoard extends Component {
     clearInterval(this.timer);
   }
 
+    // function to redirect user to login incase they are not authenticated
     serverError = (message) => {
-      notify.show(message, 'error');
+      const { history } = this.props;
+      return localStorage.getItem('token') === null ? history.push('/login') : notify.show(message, 'error');
     }
 
     serverData = (data) => {
@@ -60,19 +61,22 @@ class ItemDashBoard extends Component {
     }
 
     render() {
+      const { history } = this.props;
       return (
         <div>
-          {
-            localStorage.getItem('token') === null &&
-            <Redirect to="/login" />
-
-          }
           <Container className="list-page">
             <div className="panel panel-default">
               <div className="panel-heading site-background">
                 <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
                 <span className="pull-right">
-                  {localStorage.getItem('username')} <span className="glyphicon glyphicon-log-out" />
+                  {localStorage.getItem('username')}
+                  {'  '}
+                  <Button
+                    className="icon-btn"
+                    onClick={() => Client.logoutUser(this.serverError, history)}
+                  >
+                    <i className="fa fa-sign-out" />
+                  </Button>
                 </span>
               </div>
               <div className="panel-body">

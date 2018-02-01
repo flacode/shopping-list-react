@@ -130,6 +130,21 @@ const updateItems = (listId, itemId, itemUpdate, errorMessage) => {
     .catch(error => handleError(error, errorMessage));
 };
 
+const logoutUser = (errorMessage, historyConfig) => {
+  url = `${BASE_URL}/auth/logout`;
+  const config = {
+    headers: { Authorization: localStorage.getItem('token') },
+  };
+  axios.post(url, '', config)
+    .then((response) => {
+      token = null;
+      localStorage.removeItem('token');
+      notify.show(response.data.message, 'success');
+      historyConfig.push('/login');
+    })
+    .catch(error => handleError(error, errorMessage));
+};
+
 const Client = {
   registerUser,
   loginUser,
@@ -141,6 +156,7 @@ const Client = {
   addItems,
   deleteItems,
   updateItems,
+  logoutUser,
 };
 
 export default Client;

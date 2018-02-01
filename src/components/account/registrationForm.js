@@ -115,8 +115,7 @@ class RegistrationForm extends Component {
         return (
           <Container>
             {
-              // check if there are no server errors then redirect to login
-              this.state.server.error === false ? <Redirect to="/login" /> : null
+              localStorage.getItem('token') !== null ? <Redirect to="/shoppinglists" /> : <Redirect to="/login" />
             }
             <Card className="card-container">
               <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>

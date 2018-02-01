@@ -1,6 +1,6 @@
 /* shopping list component to display shopping lists in a table */
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Container, Button } from 'reactstrap';
 import Notifications, { notify } from 'react-notify-toast';
 import 'font-awesome/css/font-awesome.min.css';
@@ -26,8 +26,10 @@ class ShoppingListDashboard extends Component {
       clearInterval(this.timer);
     }
 
+    // function to redirect user to login incase they are not authenticated
     serverError = (message) => {
-      notify.show(message, 'error');
+      const { history } = this.props;
+      return localStorage.getItem('token') === null ? history.push('/login') : notify.show(message, 'error');
     }
 
     serverData = (data) => {
@@ -55,19 +57,22 @@ class ShoppingListDashboard extends Component {
     }
 
     render() {
+      const { history } = this.props;
       return (
         <div>
-          {
-            localStorage.getItem('token') === null &&
-            <Redirect to="/login" />
-
-          }
           <Container className="list-page">
             <div className="panel panel-default">
               <div className="panel-heading site-background">
                 <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
                 <span className="pull-right">
-                  {localStorage.getItem('username')} <span className="glyphicon glyphicon-log-out" />
+                  {localStorage.getItem('username')}
+                  {'  '}
+                  <Button
+                    className="icon-btn"
+                    onClick={() => Client.logoutUser(this.serverError, history)}
+                  >
+                    <i className="fa fa-sign-out" />
+                  </Button>
                 </span>
               </div>
               <div className="panel-body">
