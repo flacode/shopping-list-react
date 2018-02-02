@@ -40,8 +40,8 @@ const loginUser = (user, successMessage, errorMessage) => {
 };
 
 // API call to return shopping lists from the server
-const getShoppingLists = (success, message) => {
-  url = `${BASE_URL}/shoppinglists/`;
+const getShoppingLists = (success, message, perPage, pageNo) => {
+  url = `${BASE_URL}/shoppinglists/?limit=${perPage}&page=${pageNo}`;
   const config = {
     headers: { Authorization: localStorage.getItem('token') },
   };

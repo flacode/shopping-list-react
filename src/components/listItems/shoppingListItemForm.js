@@ -67,7 +67,7 @@ class ItemForm extends Component {
       this.setState(() => ({
         fields: {
           name: '',
-          quantity: 0.00,
+          quantity: 0,
           status: false,
           bought_from: '',
         },

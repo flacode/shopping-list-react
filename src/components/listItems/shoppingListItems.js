@@ -80,6 +80,7 @@ class ItemDashBoard extends Component {
     this.loadItemsFromServer();
   }
 
+<<<<<<< HEAD
   render() {
     const { history } = this.props;
     return (
@@ -118,6 +119,37 @@ class ItemDashBoard extends Component {
                   <li className="list-group-item">
                     <p> {this.state.serverMessage} </p>
                   </li> :
+=======
+    render() {
+      const { history } = this.props;
+      return (
+        <div>
+          <Container className="list-page">
+            <div className="panel panel-default">
+              <div className="panel-heading site-background">
+                <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
+                <span className="pull-right">
+                  {localStorage.getItem('username')}
+                  {'  '}
+                  <Button
+                    className="icon-btn"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      Client.logoutUser(this.serverError, history);
+                    }}
+                  >
+                    <i className="fa fa-sign-out" />
+                  </Button>
+                </span>
+              </div>
+              <div className="panel-body">
+                <Notifications />
+                <div className="list-group">
+                  { this.state.items.length <= 0 ?
+                    <li className="list-group-item">
+                      <p> {this.state.serverMessage} </p>
+                    </li> :
+>>>>>>> [Feature #154698803] Add pagination to shopping lists page
                     this.state.items.map(item => (
                       <li key={item.id} className="list-group-item">
                         <div className="float-left">
@@ -185,6 +217,7 @@ ItemDashBoard.propTypes = {
       listId: PropTypes.string,
     }).isRequired,
   }).isRequired,
+  history: PropTypes.object,
 };
 
 export default ItemDashBoard;

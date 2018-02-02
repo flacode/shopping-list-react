@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Button } from 'reactstrap';
+import Pagination from 'rc-pagination';
+import 'rc-pagination/assets/index.css';
 import Notifications, { notify } from 'react-notify-toast';
 import 'font-awesome/css/font-awesome.min.css';
 import Client from '../../client';
@@ -13,6 +15,8 @@ class ShoppingListDashboard extends Component {
     state = {
       shoppingLists: [],
       serverMessage: '',
+      currentPage: 1,
+      totalLists: 0,
     };
 
     componentDidMount() {
@@ -29,16 +33,34 @@ class ShoppingListDashboard extends Component {
     // function to redirect user to login incase they are not authenticated
     serverError = (message) => {
       const { history } = this.props;
-      return localStorage.getItem('token') === null ? history.push('/login') : notify.show(message, 'error');
+      return localStorage.getItem('token') === null ?
+        history.push(
+          {
+            pathname: '/login',
+            state: { errorMessage: message },
+          }) :
+        notify.show(message, 'error');
     }
 
     serverData = (data) => {
+<<<<<<< HEAD
       if (data.message) this.setState(() => ({ serverMessage: data.message, shoppingLists: [] }));
       if (data.shopping_lists) this.setState(() => ({ serverMessage: '', shoppingLists: data.shopping_lists }));
+=======
+      if (data.message) this.setState({ serverMessage: data.message, shoppingLists: [] });
+      if (data.shopping_lists) {
+        this.setState(
+          {
+            serverMessage: '',
+            shoppingLists: data.shopping_lists,
+            totalLists: data.total,
+          });
+      }
+>>>>>>> [Feature #154698803] Add pagination to shopping lists page
     }
 
     loadShoppingListsFromServer = () => {
-      Client.getShoppingLists(this.serverData, this.serverError);
+      Client.getShoppingLists(this.serverData, this.serverError, 4, this.state.currentPage);
     }
 
     handleCreateShoppingList = (shoppingList) => {
@@ -54,6 +76,14 @@ class ShoppingListDashboard extends Component {
     handleUpdateShoppingList = (shoppingListId, shoppingList) => {
       Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
       this.loadShoppingListsFromServer();
+    }
+
+    pageChange = (page) => {
+      // use page directly to get the lists on that page
+      Client.getShoppingLists(this.serverData, this.serverError, 4, page);
+      this.setState({
+        currentPage: page,
+      });
     }
 
     render() {
@@ -93,7 +123,6 @@ class ShoppingListDashboard extends Component {
                             { localStorage.setItem('listName', shoppingList.name) }
                           </h3>
                           <div className="list-group-item-text">
-
                             <div className="float-left">
                               Due date: { shoppingList.due_date }
                             </div>
@@ -133,6 +162,19 @@ class ShoppingListDashboard extends Component {
                 <ToggleableShoppingListForm
                   handleForm={this.handleCreateShoppingList}
                 />
+                <br />
+                <div className="row">
+                  <div className="offset-sm-9">
+                    {this.state.totalLists &&
+                    <Pagination
+                      total={this.state.totalLists}
+                      pageSize={4}
+                      onChange={this.pageChange}
+                      current={this.state.currentPage}
+                      hideOnSinglePage
+                    />}
+                  </div>
+                </div>
               </div>
               <div className="panel-footer site-background">@flacode</div>
             </div>
