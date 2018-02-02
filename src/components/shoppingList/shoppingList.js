@@ -88,7 +88,10 @@ class ShoppingListDashboard extends Component {
                     { this.state.shoppingLists.map(shoppingList =>
                       (
                         <li key={shoppingList.id} className="list-group-item">
-                          <h3 className="list-name">{shoppingList.name}</h3>
+                          <h3 className="list-name">
+                            {shoppingList.name}
+                            { localStorage.setItem('listName', shoppingList.name) }
+                          </h3>
                           <div className="list-group-item-text">
 
                             <div className="float-left">
