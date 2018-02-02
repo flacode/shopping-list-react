@@ -43,20 +43,15 @@ class ShoppingListDashboard extends Component {
     }
 
     serverData = (data) => {
-<<<<<<< HEAD
       if (data.message) this.setState(() => ({ serverMessage: data.message, shoppingLists: [] }));
-      if (data.shopping_lists) this.setState(() => ({ serverMessage: '', shoppingLists: data.shopping_lists }));
-=======
-      if (data.message) this.setState({ serverMessage: data.message, shoppingLists: [] });
       if (data.shopping_lists) {
-        this.setState(
-          {
+        this.setState(() =>
+          ({
             serverMessage: '',
             shoppingLists: data.shopping_lists,
             totalLists: data.total,
-          });
+          }));
       }
->>>>>>> [Feature #154698803] Add pagination to shopping lists page
     }
 
     loadShoppingListsFromServer = () => {

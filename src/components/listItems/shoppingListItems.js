@@ -80,7 +80,6 @@ class ItemDashBoard extends Component {
     this.loadItemsFromServer();
   }
 
-<<<<<<< HEAD
   render() {
     const { history } = this.props;
     return (
@@ -94,7 +93,10 @@ class ItemDashBoard extends Component {
                 {' '}
                 <Button
                   className="icon-btn"
-                  onClick={() => Client.logoutUser(this.serverError, history)}
+                  onClick={(event) => {
+                  event.preventDefault();
+                  Client.logoutUser(this.serverError, history);
+                }}
                 >
                   <i className="fa fa-sign-out" />
                 </Button>
@@ -119,37 +121,6 @@ class ItemDashBoard extends Component {
                   <li className="list-group-item">
                     <p> {this.state.serverMessage} </p>
                   </li> :
-=======
-    render() {
-      const { history } = this.props;
-      return (
-        <div>
-          <Container className="list-page">
-            <div className="panel panel-default">
-              <div className="panel-heading site-background">
-                <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
-                <span className="pull-right">
-                  {localStorage.getItem('username')}
-                  {'  '}
-                  <Button
-                    className="icon-btn"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      Client.logoutUser(this.serverError, history);
-                    }}
-                  >
-                    <i className="fa fa-sign-out" />
-                  </Button>
-                </span>
-              </div>
-              <div className="panel-body">
-                <Notifications />
-                <div className="list-group">
-                  { this.state.items.length <= 0 ?
-                    <li className="list-group-item">
-                      <p> {this.state.serverMessage} </p>
-                    </li> :
->>>>>>> [Feature #154698803] Add pagination to shopping lists page
                     this.state.items.map(item => (
                       <li key={item.id} className="list-group-item">
                         <div className="float-left">
@@ -171,7 +142,10 @@ class ItemDashBoard extends Component {
                               <ModalBody>
                                 <p><b>Quantity:</b> {item.quantity}</p>
                                 <p><b>Bought from:</b> {item.bought_from}</p>
-                                <p><b>Status: </b> {item.status ? <span className="glyphicon glyphicon-check bought" /> : <span className="glyphicon glyphicon-unchecked not-bought" />}</p>
+                                <p><b>Status: </b> {item.status ?
+                                  <span className="glyphicon glyphicon-check bought" /> :
+                                  <span className="glyphicon glyphicon-unchecked not-bought" />}
+                                </p>
                               </ModalBody>
                               <ModalFooter>
                                 <Button className="btn-auth" onClick={this.toggle}>Close</Button>
