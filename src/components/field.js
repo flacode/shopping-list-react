@@ -12,9 +12,9 @@ class Field extends Component {
 
     // allows field component be updated by  bothe itself and parent
     componentWillReceiveProps(update) {
-      this.setState({
+      this.setState(() => ({
         value: update.value,
-      });
+      }));
     }
 
     // method to accept and validate user input, update state and call parent event handler
@@ -23,10 +23,10 @@ class Field extends Component {
       const value = event.target.value;
       const error = this.props.validate ? this.props.validate(value) : false;
 
-      this.setState({
+      this.setState(() => ({
         value,
         error,
-      });
+      }));
 
       this.props.onChange({ name, value, error });
     }

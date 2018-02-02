@@ -27,20 +27,19 @@ class ItemForm extends Component {
 
     // toggle status of a check box
     handleCheck = () => {
-      const fields = this.state.fields;
-      fields.status = !this.state.fields.status;
-      this.setState({ fields });
+      const fields = { status: !this.state.fields.status };
+      this.setState(() => ({
+        fields: { ...this.state.fields, ...fields },
+      }));
     }
 
     handleInputChange = ({ name, value, error }) => {
-      const fields = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
-      fields[name] = value;
-      fieldErrors[name] = error;
-      this.setState({
-        fields,
-        fieldErrors,
-      });
+      const field = { [name]: value };
+      const fieldError = { [name]: error };
+      this.setState(() => ({
+        fields: { ...this.state.fields, ...field },
+        fieldErrors: { ...this.state.fieldErrors, ...fieldError },
+      }));
     }
 
     validate = () => {
@@ -65,14 +64,14 @@ class ItemForm extends Component {
         status: this.state.fields.status.toString(),
         bought_from: this.state.fields.bought_from,
       });
-      this.setState({
+      this.setState(() => ({
         fields: {
           name: '',
           quantity: 0.00,
           status: false,
           bought_from: '',
         },
-      });
+      }));
       this.props.handleToggle();
     }
 

@@ -3,14 +3,12 @@ import { notify } from 'react-notify-toast';
 
 // const BASE_URL = 'https://deployment-shopping-list-api.herokuapp.com/api';
 const BASE_URL = 'http://127.0.0.1:5000/api';
-let token = null;
 let url;
 
 const handleError = (error, errorMessage) => {
   // handle API generated errors
   if (error.response) {
     if (error.response.status === 401) {
-      token = null;
       localStorage.removeItem('token');
     }
     errorMessage(error.response.data.message);
@@ -33,8 +31,7 @@ const loginUser = (user, successMessage, errorMessage) => {
   url = `${BASE_URL}/auth/login`;
   axios.post(url, user)
     .then((response) => {
-      token = response.data.access_token;
-      localStorage.setItem('token', token);
+      localStorage.setItem('token', response.data.access_token);
 
       // update localStorage for logged in user
       return successMessage(response.data.message);
@@ -137,7 +134,6 @@ const logoutUser = (errorMessage, historyConfig) => {
   };
   axios.post(url, '', config)
     .then((response) => {
-      token = null;
       localStorage.removeItem('token');
       notify.show(response.data.message, 'success');
       historyConfig.push('/login');

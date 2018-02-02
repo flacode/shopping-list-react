@@ -23,14 +23,12 @@ class ShoppingListForm extends Component {
 
     // function to handle changes to the form input and update the state
     handleInputChange = ({ name, value, error }) => {
-      const fields = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
-      fields[name] = value;
-      fieldErrors[name] = error;
-      this.setState({
-        fields,
-        fieldErrors,
-      });
+      const field = { [name]: value };
+      const fieldError = { [name]: error };
+      this.setState(() => ({
+        fields: { ...this.state.fields, ...field },
+        fieldErrors: { ...this.state.fieldErrors, ...fieldError },
+      }));
     }
 
     // function to perform client side validation
@@ -55,12 +53,12 @@ class ShoppingListForm extends Component {
         name: this.state.fields.name,
         due_date: this.state.fields.due_date,
       });
-      this.setState({
+      this.setState(() => ({
         fields: {
           name: '',
           due_date: '',
         },
-      });
+      }));
       this.props.handleToggle();
     }
 

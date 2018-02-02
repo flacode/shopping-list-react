@@ -114,7 +114,7 @@ html {
   margin-top: 15px;
 }
 
-.panel-body{
+.panel-body {
   height: 100%;
   background-color: #F7F7F7;
   min-height: 80vh;
@@ -165,15 +165,15 @@ html {
   margin: auto;
 }
 
-.float-left{
+.float-left {
   float: left
 }
 
-.float-right{
+.float-right {
   float: right;
 }
 
-.clear-float{
+.clear-float {
   clear: both;
 }
 

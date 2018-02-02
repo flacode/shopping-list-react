@@ -30,62 +30,62 @@ class ItemDashBoard extends Component {
     clearInterval(this.timer);
   }
 
-    // function to redirect user to login incase they are not authenticated
-    serverError = (message) => {
-      const { history } = this.props;
-      return localStorage.getItem('token') === null ? history.push('/login') : notify.show(message, 'error');
-    }
+  // function to redirect user to login incase they are not authenticated
+  serverError = (message) => {
+    const { history } = this.props;
+    return localStorage.getItem('token') === null ? history.push('/login') : notify.show(message, 'error');
+  }
 
-    serverData = (data) => {
-      if (data.message) this.setState({ serverMessage: data.message, items: [] });
-      if (data.Items) this.setState({ serverMessage: '', items: data.Items });
-    }
+  serverData = (data) => {
+    if (data.message) this.setState({ serverMessage: data.message, items: [] });
+    if (data.Items) this.setState({ serverMessage: '', items: data.Items });
+  }
 
-    loadItemsFromServer = () => {
-      Client.getItems(this.listId, this.serverData, this.serverError);
-    }
+  loadItemsFromServer = () => {
+    Client.getItems(this.listId, this.serverData, this.serverError);
+  }
 
-    handleCreateItem = (item) => {
-      Client.addItems(this.listId, item, this.serverError);
-      this.loadItemsFromServer();
-    }
+  handleCreateItem = (item) => {
+    Client.addItems(this.listId, item, this.serverError);
+    this.loadItemsFromServer();
+  }
 
-    handleDeleteItem = (itemId) => {
-      Client.deleteItems(this.listId, itemId, this.serverError);
-      this.loadItemsFromServer();
-    }
+  handleDeleteItem = (itemId) => {
+    Client.deleteItems(this.listId, itemId, this.serverError);
+    this.loadItemsFromServer();
+  }
 
-    handleUpdateItem = (itemId, item) => {
-      Client.updateItems(this.listId, itemId, item, this.serverError);
-      this.loadItemsFromServer();
-    }
+  handleUpdateItem = (itemId, item) => {
+    Client.updateItems(this.listId, itemId, item, this.serverError);
+    this.loadItemsFromServer();
+  }
 
-    render() {
-      const { history } = this.props;
-      return (
-        <div>
-          <Container className="list-page">
-            <div className="panel panel-default">
-              <div className="panel-heading site-background">
-                <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
-                <span className="pull-right">
-                  {localStorage.getItem('username')}
-                  {'  '}
-                  <Button
-                    className="icon-btn"
-                    onClick={() => Client.logoutUser(this.serverError, history)}
-                  >
-                    <i className="fa fa-sign-out" />
-                  </Button>
-                </span>
-              </div>
-              <div className="panel-body">
-                <Notifications />
-                <div className="list-group">
-                  { this.state.items.length <= 0 ?
-                    <li className="list-group-item">
-                      <p> {this.state.serverMessage} </p>
-                    </li> :
+  render() {
+    const { history } = this.props;
+    return (
+      <div>
+        <Container className="list-page">
+          <div className="panel panel-default">
+            <div className="panel-heading site-background">
+              <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
+              <span className="pull-right">
+                {localStorage.getItem('username')}
+                {'  '}
+                <Button
+                  className="icon-btn"
+                  onClick={() => Client.logoutUser(this.serverError, history)}
+                >
+                  <i className="fa fa-sign-out" />
+                </Button>
+              </span>
+            </div>
+            <div className="panel-body">
+              <Notifications />
+              <div className="list-group">
+                { this.state.items.length <= 0 ?
+                  <li className="list-group-item">
+                    <p> {this.state.serverMessage} </p>
+                  </li> :
                     this.state.items.map(item => (
                       <li key={item.id} className="list-group-item">
                         <div className="float-left">
@@ -124,15 +124,15 @@ class ItemDashBoard extends Component {
                     ),
                   )
                   }
-                </div>
-                <ToggleableItemForm handleForm={this.handleCreateItem} />
               </div>
-              <div className="panel-footer site-background">@flacode</div>
+              <ToggleableItemForm handleForm={this.handleCreateItem} />
             </div>
-          </Container>
-        </div>
-      );
-    }
+            <div className="panel-footer site-background">@flacode</div>
+          </div>
+        </Container>
+      </div>
+    );
+  }
 }
 
 ItemDashBoard.propTypes = {

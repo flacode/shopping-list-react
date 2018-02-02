@@ -33,8 +33,8 @@ class ShoppingListDashboard extends Component {
     }
 
     serverData = (data) => {
-      if (data.message) this.setState({ serverMessage: data.message, shoppingLists: [] });
-      if (data.shopping_lists) this.setState({ serverMessage: '', shoppingLists: data.shopping_lists });
+      if (data.message) this.setState(() => ({ serverMessage: data.message, shoppingLists: [] }));
+      if (data.shopping_lists) this.setState(() => ({ serverMessage: '', shoppingLists: data.shopping_lists }));
     }
 
     loadShoppingListsFromServer = () => {

@@ -37,31 +37,29 @@ class RegistrationForm extends Component {
 
     // funtion to handle input change by updating the state
     onInputChange = ({ name, value, error }) => {
-      const fields = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
-      fields[name] = value;
-      fieldErrors[name] = error;
-      this.setState({
-        fields,
-        fieldErrors,
+      const fields = { [name]: value };
+      const fieldErrors = { [name]: error };
+      this.setState(() => ({
+        fields: { ...this.state.fields, ...fields },
+        fieldErrors: { ...this.state.fieldErrors, ...fieldErrors },
         server: {
           error: '',
           message: '',
         },
-      });
+      }));
     }
 
     // function to clear the form fields on reset
     onFormReset = (event) => {
       event.preventDefault();
-      this.setState({
+      this.setState(() => ({
         fields: {
           username: '',
           email: '',
           password: '',
           confirmPassword: '',
         },
-      });
+      }));
     }
 
   // function to handle the submit event of the form
@@ -73,30 +71,30 @@ class RegistrationForm extends Component {
       if (this.validate()) return;
 
       // send validated data to the server
-      this.setState({ loading: true });
+      this.setState(() => ({ loading: true }));
       Client.registerUser(user, this.successServer, this.errorServer);
     }
 
     // function to handle a successful API operation
     successServer = (message) => {
-      this.setState({
+      this.setState(() => ({
         loading: false,
         server: {
           error: false,
         },
-      });
+      }));
       notify.show(message, 'success');
     }
 
       // function to handle unsuccessful API operation
       errorServer = (message) => {
-        this.setState({
+        this.setState(() => ({
           loading: false,
           server: {
             error: true,
             message,
           },
-        });
+        }));
       }
 
       // function to validate the form for both field and form errors
@@ -110,12 +108,11 @@ class RegistrationForm extends Component {
         return false;
       }
 
-
       render() {
         return (
           <Container>
             {
-              localStorage.getItem('token') !== null ? <Redirect to="/shoppinglists" /> : <Redirect to="/login" />
+              localStorage.getItem('token') !== null && <Redirect to="/shoppinglists" />
             }
             <Card className="card-container">
               <CardTitle className="thick-heading">SHOPPING LIST</CardTitle>

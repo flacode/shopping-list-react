@@ -12,9 +12,9 @@ class ToggleableItemForm extends Component {
     };
 
     toggle = () => {
-      this.setState({
+      this.setState(() => ({
         modal: !this.state.modal,
-      });
+      }));
     }
 
     handleFormSubmit = (item) => {
