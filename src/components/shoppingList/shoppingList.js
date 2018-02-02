@@ -76,9 +76,9 @@ class ShoppingListDashboard extends Component {
     pageChange = (page) => {
       // use page directly to get the lists on that page
       Client.getShoppingLists(this.serverData, this.serverError, 4, page);
-      this.setState({
+      this.setState(() => ({
         currentPage: page,
-      });
+      }));
     }
 
     render() {
