@@ -197,3 +197,11 @@ html {
   color: red;
   font-size: 15px;
 }
+
+.not-bought {
+  color: red;
+}
+
+.bought {
+  color: rgb(34, 180, 158);
+}

@@ -1,6 +1,6 @@
 /* Item component to display items in a shopping list in a table */
 import React, { Component } from 'react';
-import { Container, Button } from 'reactstrap';
+import { Container, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import PropTypes from 'prop-types';
 import Notifications, { notify } from 'react-notify-toast';
 import headerIcon from '../../imgs/header.png';
@@ -13,6 +13,7 @@ class ItemDashBoard extends Component {
     this.state = {
       items: [],
       serverMessage: '',
+      viewList: false,
     };
     this.listId = '';
   }
@@ -28,6 +29,10 @@ class ItemDashBoard extends Component {
 
   componentWillUnmount() {
     clearInterval(this.timer);
+  }
+
+  toggle = () => {
+    this.setState(prevState => ({ viewList: !prevState.viewList }));
   }
 
   // function to redirect user to login incase they are not authenticated
@@ -98,9 +103,21 @@ class ItemDashBoard extends Component {
                           <div className="action-btn">
                             <Button
                               className="icon-btn"
+                              onClick={this.toggle}
                             >
                               <i className="fa fa-eye" />
                             </Button>
+                            <Modal isOpen={this.state.viewList} toggle={this.toggle}>
+                              <ModalHeader className="modal-heading">{item.name.toUpperCase()}</ModalHeader>
+                              <ModalBody>
+                                <p><b>Quantity:</b> {item.quantity}</p>
+                                <p><b>Bought from:</b> {item.bought_from}</p>
+                                <p><b>Status: </b> {item.status ? <span className="glyphicon glyphicon-check bought" /> : <span className="glyphicon glyphicon-unchecked not-bought" />}</p>
+                              </ModalBody>
+                              <ModalFooter>
+                                <Button className="btn-auth" onClick={this.toggle}>Close</Button>
+                              </ModalFooter>
+                            </Modal>
                             { ' '}
                             <ToggleableItemForm
                               handleForm={updatedItem => this.handleUpdateItem(item.id, updatedItem)}
