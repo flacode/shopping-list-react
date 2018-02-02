@@ -1,6 +1,16 @@
 /* Item component to display items in a shopping list in a table */
 import React, { Component } from 'react';
-import { Container, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
+import {
+  Container,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalFooter,
+  Breadcrumb,
+  BreadcrumbItem,
+} from 'reactstrap';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Notifications, { notify } from 'react-notify-toast';
 import headerIcon from '../../imgs/header.png';
@@ -85,6 +95,12 @@ class ItemDashBoard extends Component {
               </span>
             </div>
             <div className="panel-body">
+              <Breadcrumb tag="nav">
+                <BreadcrumbItem>
+                  <Link className="list-name" to="/shoppinglists">Home</Link>
+                </BreadcrumbItem>
+                <BreadcrumbItem active tag="span">{localStorage.getItem('listName')}</BreadcrumbItem>
+              </Breadcrumb>
               <Notifications />
               <div className="list-group">
                 { this.state.items.length <= 0 ?
