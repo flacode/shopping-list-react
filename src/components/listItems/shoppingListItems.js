@@ -9,6 +9,7 @@ import {
   ModalFooter,
   Breadcrumb,
   BreadcrumbItem,
+  Progress,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -24,6 +25,7 @@ class ItemDashBoard extends Component {
       items: [],
       serverMessage: '',
       viewList: false,
+      trueCount: 0,
     };
     this.listId = '';
   }
@@ -52,8 +54,11 @@ class ItemDashBoard extends Component {
   }
 
   serverData = (data) => {
-    if (data.message) this.setState({ serverMessage: data.message, items: [] });
-    if (data.Items) this.setState({ serverMessage: '', items: data.Items });
+    if (data.message) this.setState(() => ({ serverMessage: data.message, items: [] }));
+    if (data.Items) {
+      const count = data.Items.map(item => item.status).filter(v => v).length;
+      this.setState(() => ({ serverMessage: '', items: data.Items, trueCount: count }));
+    }
   }
 
   loadItemsFromServer = () => {
@@ -85,7 +90,7 @@ class ItemDashBoard extends Component {
               <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
               <span className="pull-right">
                 {localStorage.getItem('username')}
-                {'  '}
+                {' '}
                 <Button
                   className="icon-btn"
                   onClick={() => Client.logoutUser(this.serverError, history)}
@@ -95,13 +100,19 @@ class ItemDashBoard extends Component {
               </span>
             </div>
             <div className="panel-body">
+              <Notifications />
               <Breadcrumb tag="nav">
                 <BreadcrumbItem>
                   <Link className="list-name" to="/shoppinglists">Home</Link>
                 </BreadcrumbItem>
                 <BreadcrumbItem active tag="span">{localStorage.getItem('listName')}</BreadcrumbItem>
               </Breadcrumb>
-              <Notifications />
+              <Progress
+                animated
+                color="info"
+                value={Math.floor((this.state.trueCount / this.state.items.length) * 100)}
+              >Items bought
+              </Progress>
               <div className="list-group">
                 { this.state.items.length <= 0 ?
                   <li className="list-group-item">
