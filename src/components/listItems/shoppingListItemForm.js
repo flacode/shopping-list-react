@@ -27,9 +27,9 @@ class ItemForm extends Component {
 
     // toggle status of a check box
     handleCheck = () => {
-      const fields = { status: !this.state.fields.status };
+      const field = { status: !this.state.fields.status };
       this.setState(() => ({
-        fields: { ...this.state.fields, ...fields },
+        fields: { ...this.state.fields, ...field },
       }));
     }
 
