@@ -1,7 +1,7 @@
 /* shopping list component to display shopping lists in a table */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Button } from 'reactstrap';
+import { Container, Button, Input } from 'reactstrap';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import Notifications, { notify } from 'react-notify-toast';
@@ -17,6 +17,7 @@ class ShoppingListDashboard extends Component {
       serverMessage: '',
       currentPage: 1,
       totalLists: 0,
+      searchKey: '',
     };
 
     componentDidMount() {
@@ -55,7 +56,7 @@ class ShoppingListDashboard extends Component {
     }
 
     loadShoppingListsFromServer = () => {
-      Client.getShoppingLists(this.serverData, this.serverError, 4, this.state.currentPage);
+      Client.getShoppingLists(this.serverData, this.serverError, 4, this.state.currentPage, this.state.searchKey);
     }
 
     handleCreateShoppingList = (shoppingList) => {
@@ -81,6 +82,18 @@ class ShoppingListDashboard extends Component {
       }));
     }
 
+    handleChange = (event) => {
+      const { value } = event.target;
+      this.setState(() => ({
+        searchKey: value,
+      }));
+    }
+
+    handleSearch = (event) => {
+      event.preventDefault();
+      this.loadShoppingListsFromServer();
+    }
+
     render() {
       const { history } = this.props;
       return (
@@ -102,6 +115,13 @@ class ShoppingListDashboard extends Component {
               </div>
               <div className="panel-body">
                 <Notifications />
+                <div className="row">
+                  <div className="offset-sm-8">
+                    <form onSubmit={this.handleSearch}>
+                      <Input type="search" name="search" placeholder="Search" onChange={this.handleChange} />
+                    </form>
+                  </div>
+                </div>
                 <div className="list-group">
                   {this.state.serverMessage &&
                     <li className="list-group-item">
