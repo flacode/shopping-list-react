@@ -1,67 +1,82 @@
 /* Component to toggle form for create item in shopping list */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
+import 'font-awesome/css/font-awesome.min.css';
 import ItemForm from './shoppingListItemForm';
+import '../../App.css';
 
 class ToggleableItemForm extends Component {
     state = {
-      isOpen: false,
+      modal: false,
     };
 
-    handleAddClick = () => {
-      this.setState({
-        isOpen: true,
-      });
-    }
-
-    handleFormClose = () => {
-      this.setState({
-        isOpen: false,
-      });
+    toggle = () => {
+      this.setState(() => ({
+        modal: !this.state.modal,
+      }));
     }
 
     handleFormSubmit = (item) => {
-      if (item.name === '') {
-        // will return error message here
-        console.log('Item name provided');
-        return;
-      }
-      if (item.quantity === '') {
-        // will return error message here
-        console.log('No quantity provided');
-        return;
-      }
-      if (item.bought_from === '') {
-        // will return error message here
-        console.log('No bought from provided');
-        return;
-      }
-      if (item.status === '') {
-        // will return error message here
-        console.log('No status provided');
-        return;
-      }
-
-      this.props.onFormSubmit(item);
-      this.setState({
-        isOpen: false,
-      });
+      this.props.handleForm(item);
     }
 
     render() {
-      if (this.state.isOpen) {
-        return (
-          <ItemForm onFormClose={this.handleFormClose} onFormSubmit={this.handleFormSubmit} />
-        );
-      }
       return (
-        <button type="button" onClick={this.handleAddClick}>Add</button>
+        <div>
+          { this.props.updateItem ?
+            <div>
+              <Button className="icon-btn" onClick={this.toggle}>
+                <i className="fa fa-edit" />
+              </Button>
+              <ItemForm
+                openModal={this.state.modal}
+                handleToggle={this.toggle}
+                handleFormSubmitted={this.handleFormSubmit}
+                heading="Update shopping list item"
+                submitText="Update"
+                name={this.props.name}
+                quantity={this.props.quantity}
+                status={this.props.status}
+                bought_from={this.props.bought_from}
+              />
+            </div> :
+            <div>
+              <Button
+                className="btn-list btn-auth"
+                onClick={this.toggle}
+              >
+                Add new item
+              </Button>
+              <ItemForm
+                openModal={this.state.modal}
+                handleToggle={this.toggle}
+                handleFormSubmitted={this.handleFormSubmit}
+                heading="Add item to shopping list"
+                submitText="Add"
+              />
+            </div>
+        }
+        </div>
       );
     }
 }
 
 ToggleableItemForm.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
+  handleForm: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  quantity: PropTypes.number,
+  status: PropTypes.bool,
+  bought_from: PropTypes.string,
+  updateItem: PropTypes.bool,
+};
+
+ToggleableItemForm.defaultProps = {
+  updateItem: false,
+  name: '',
+  quantity: 0,
+  status: false,
+  bought_from: '',
 };
 
 export default ToggleableItemForm;

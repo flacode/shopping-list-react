@@ -31,48 +31,48 @@ class LoginForm extends React.Component {
       },
     }
 
-    onFormSubmit = (evt) => {
-      evt.preventDefault();
+    onFormSubmit = (event) => {
+      event.preventDefault();
       const user = this.state.fields;
 
       // send validated data to the server
-      this.setState({ loading: true });
+      this.setState(() => ({ loading: true }));
       Client.loginUser(user, this.successServer, this.errorServer);
     }
 
     handleInputChange = ({ name, value }) => {
-      const fields = this.state.fields;
+      const fields = { [name]: value };
       fields[name] = value;
-      this.setState({
-        fields,
+      this.setState(() => ({
+        fields: { ...this.state.fields, ...fields },
         server: {
           error: '',
           message: '',
         },
-      });
+      }));
     }
 
     // function to handle a successful API operation
     successServer = (message) => {
       localStorage.setItem('username', this.state.fields.username);
-      this.setState({
+      this.setState(() => ({
         loading: false,
         server: {
           error: false,
           message,
         },
-      });
+      }));
     }
 
     // function to handle unsuccessful API operation
     errorServer = (message) => {
-      this.setState({
+      this.setState(() => ({
         loading: false,
         server: {
           error: true,
           message,
         },
-      });
+      }));
     }
 
     render() {

@@ -1,115 +1,156 @@
 /* Component to render form for creating a shopping list item */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Label,
+  Input,
+} from 'reactstrap';
 import validator from 'validator';
+import '../../App.css';
 import Field from '../field';
 
 class ItemForm extends Component {
     state = {
       fields: {
-        name: this.props.name || '',
-        quantity: this.props.quantity || '',
-        status: this.props.status || false,
-        bought_from: this.props.bought_from || '',
+        name: this.props.name,
+        quantity: this.props.quantity,
+        status: this.props.status,
+        bought_from: this.props.bought_from,
       },
       fieldErrors: {},
     };
 
-    onInputChange = ({ name, value, error }) => {
-      const fields = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
-      fields[name] = value;
-      fieldErrors[name] = error;
-      this.setState({
-        fields,
-        fieldErrors,
-      });
+    // toggle status of a check box
+    handleCheck = () => {
+      const field = { status: !this.state.fields.status };
+      this.setState(() => ({
+        fields: { ...this.state.fields, ...field },
+      }));
+    }
+
+    handleInputChange = ({ name, value, error }) => {
+      const field = { [name]: value };
+      const fieldError = { [name]: error };
+      this.setState(() => ({
+        fields: { ...this.state.fields, ...field },
+        fieldErrors: { ...this.state.fieldErrors, ...fieldError },
+      }));
     }
 
     validate = () => {
-      const item = this.state.fields;
+      // const item = this.state.fields;
       const fieldErrors = this.state.fieldErrors;
       const errMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
-      if (!item.name) return true;
-      if (!item.quantity) return true;
-      if (!item.status) return true;
-      if (!item.bought_from) return true;
+      // if (!item.name) return true;
+      // if (!item.quantity) return true;
+      // if (!item.status) return true;
+      // if (!item.bought_from) return true;
       if (errMessages.length) return true;
       return false;
     }
 
-    handleFormSubmit = (evt) => {
-      evt.preventDefault();
-
+    handleFormSubmit = (event) => {
+      event.preventDefault();
       if (this.validate()) return;
 
-      this.props.onFormSubmit({
-        id: this.props.id,
+      this.props.handleFormSubmitted({
         name: this.state.fields.name,
         quantity: this.state.fields.quantity,
-        status: this.state.fields.status,
+        status: this.state.fields.status.toString(),
         bought_from: this.state.fields.bought_from,
       });
+      this.setState(() => ({
+        fields: {
+          name: '',
+          quantity: 0.00,
+          status: false,
+          bought_from: '',
+        },
+      }));
+      this.props.handleToggle();
     }
 
     render() {
-      const submitText = this.props.id ? 'Update' : 'Create';
       return (
         <div>
-          <Field
-            label="Name:"
-            name="name"
-            value={this.state.fields.name}
-            onChange={this.onInputChange}
-            validate={val => (validator.isAlphanumeric(val) ? false : 'Item name should contain numbers or letters only.')}
-          />
-          <br />
-          <Field
-            label="Quantity:"
-            name="quantity"
-            value={this.state.fields.quantity}
-            onChange={this.onInputChange}
-            validate={val => (validator.isFloat(val) ? false : 'Quantity should be a number.')}
-          />
-          <br />
-          <Field
-            label="Bought From:"
-            name="bought_from"
-            value={this.state.fields.bought_from}
-            onChange={this.onInputChange}
-          />
-          <br />
-          <Field
-            label="Status:"
-            name="status"
-            type="checkbox"
-            value={this.state.fields.status ? 'true' : 'false'} // set value to tru or false
-            onChange={this.onInputChange}
-            validate={val => (validator.isBoolean(val) ? false : 'Status can only be true or false.')}
-          />
-          <br />
-          <button onClick={this.handleFormSubmit} disabled={this.validate()} >{submitText}</button>
-          <button onClick={this.props.onFormClose}>Cancel</button>
+          <Modal isOpen={this.props.openModal} toggle={this.props.handleToggle}>
+            <ModalHeader className="modal-heading">{this.props.heading}</ModalHeader>
+            <ModalBody>
+              <Field
+                label="Name"
+                name="name"
+                value={this.state.fields.name}
+                onChange={this.handleInputChange}
+                labels
+              />
+              <br />
+              <Field
+                label="Quantity"
+                name="quantity"
+                type="number"
+                value={this.state.fields.quantity}
+                onChange={this.handleInputChange}
+                labels
+                validate={val => (validator.isFloat(val) ? false : 'Quantity should be a number.')}
+              />
+              <br />
+              <Field
+                label="Bought From"
+                name="bought_from"
+                value={this.state.fields.bought_from}
+                onChange={this.handleInputChange}
+                labels
+              />
+              <br />
+              <div className="row">
+                <div className="col-sm-5">
+                  <Label for="status" className="label-text">
+                    Status
+                  </Label>
+                </div>
+                <div className="col-sm-7">
+                  <Input
+                    id="status"
+                    name="status"
+                    type="checkbox"
+                    onChange={this.handleCheck}
+                    checked={this.state.fields.status}
+                  />
+                  { this.state.error && <div className="form-error">{this.state.error}</div>}
+                </div>
+              </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button className="btn-auth" onClick={this.handleFormSubmit}>{this.props.submitText}</Button>{' '}
+              <Button className="btn-auth" onClick={this.props.handleToggle}>Cancel</Button>
+            </ModalFooter>
+          </Modal>
         </div>
       );
     }
 }
 
 ItemForm.propTypes = {
-  // TODO: submit text as a prop submitText: PropTypes.string,
-  onFormClose: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired,
+  submitText: PropTypes.string.isRequired,
+  handleFormSubmitted: PropTypes.func.isRequired,
   name: PropTypes.string,
   quantity: PropTypes.number,
   bought_from: PropTypes.string,
   status: PropTypes.bool,
+  openModal: PropTypes.bool.isRequired,
+  handleToggle: PropTypes.func.isRequired,
+  heading: PropTypes.string.isRequired,
 };
 
 ItemForm.defaultProps = {
-  // submitText: null,
-  name: null,
-  quantity: null,
-  bought_from: null,
+  name: '',
+  quantity: 0,
+  bought_from: '',
   status: false,
 };
 

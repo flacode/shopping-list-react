@@ -23,14 +23,12 @@ class ShoppingListForm extends Component {
 
     // function to handle changes to the form input and update the state
     handleInputChange = ({ name, value, error }) => {
-      const fields = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
-      fields[name] = value;
-      fieldErrors[name] = error;
-      this.setState({
-        fields,
-        fieldErrors,
-      });
+      const field = { [name]: value };
+      const fieldError = { [name]: error };
+      this.setState(() => ({
+        fields: { ...this.state.fields, ...field },
+        fieldErrors: { ...this.state.fieldErrors, ...fieldError },
+      }));
     }
 
     // function to perform client side validation
@@ -48,18 +46,19 @@ class ShoppingListForm extends Component {
      * Sends data to a function from props
      * Toggle the form to close it
     */
-    handleFormSubmit = () => {
+    handleFormSubmit = (event) => {
+      event.preventDefault();
       if (this.validate()) return;
       this.props.handleFormSubmitted({
         name: this.state.fields.name,
         due_date: this.state.fields.due_date,
       });
-      this.setState({
+      this.setState(() => ({
         fields: {
           name: '',
           due_date: '',
         },
-      });
+      }));
       this.props.handleToggle();
     }
 
@@ -74,6 +73,7 @@ class ShoppingListForm extends Component {
                 name="name"
                 value={this.state.fields.name}
                 onChange={this.handleInputChange}
+                labels
               />
               <br />
               <Field
@@ -82,6 +82,7 @@ class ShoppingListForm extends Component {
                 type="date"
                 value={this.state.fields.due_date}
                 onChange={this.handleInputChange}
+                labels
                 validate={val => (validator.isAfter(val) ? false : 'Date should not be before today.')}
               />
             </ModalBody>

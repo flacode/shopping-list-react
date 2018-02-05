@@ -1,6 +1,6 @@
 /* shopping list component to display shopping lists in a table */
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Container, Button } from 'reactstrap';
 import Notifications, { notify } from 'react-notify-toast';
 import 'font-awesome/css/font-awesome.min.css';
@@ -11,7 +11,7 @@ import '../../App.css';
 
 class ShoppingListDashboard extends Component {
     state = {
-      shoppingLists: {},
+      shoppingLists: [],
       serverMessage: '',
     };
 
@@ -26,20 +26,21 @@ class ShoppingListDashboard extends Component {
       clearInterval(this.timer);
     }
 
+    // function to redirect user to login incase they are not authenticated
     serverError = (message) => {
-      notify.show(message, 'error');
+      const { history } = this.props;
+      return localStorage.getItem('token') === null ? history.push('/login') : notify.show(message, 'error');
     }
 
     serverData = (data) => {
-      if (data.message) this.setState({ serverMessage: data.message, shoppingLists: {} });
-      if (data.shopping_lists) this.setState({ serverMessage: '', shoppingLists: data.shopping_lists });
+      if (data.message) this.setState(() => ({ serverMessage: data.message, shoppingLists: [] }));
+      if (data.shopping_lists) this.setState(() => ({ serverMessage: '', shoppingLists: data.shopping_lists }));
     }
 
     loadShoppingListsFromServer = () => {
       Client.getShoppingLists(this.serverData, this.serverError);
     }
 
-    // i need to get the server errors and display them
     handleCreateShoppingList = (shoppingList) => {
       Client.createShoppingList(shoppingList, this.serverError);
       this.loadShoppingListsFromServer();
@@ -51,25 +52,27 @@ class ShoppingListDashboard extends Component {
     }
 
     handleUpdateShoppingList = (shoppingListId, shoppingList) => {
-      console.log('Update', shoppingList);
       Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
       this.loadShoppingListsFromServer();
     }
 
     render() {
+      const { history } = this.props;
       return (
         <div>
-          {
-            localStorage.getItem('token') === null &&
-            <Redirect to="/login" />
-
-          }
           <Container className="list-page">
             <div className="panel panel-default">
               <div className="panel-heading site-background">
                 <span className="page-heading">SHOPPING LIST <img src={headerIcon} alt="icon for heading" /></span>
                 <span className="pull-right">
-                  {localStorage.getItem('username')} <span className="glyphicon glyphicon-log-out" />
+                  {localStorage.getItem('username')}
+                  {'  '}
+                  <Button
+                    className="icon-btn"
+                    onClick={() => Client.logoutUser(this.serverError, history)}
+                  >
+                    <i className="fa fa-sign-out" />
+                  </Button>
                 </span>
               </div>
               <div className="panel-body">
@@ -85,8 +88,10 @@ class ShoppingListDashboard extends Component {
                     { this.state.shoppingLists.map(shoppingList =>
                       (
                         <li key={shoppingList.id} className="list-group-item">
-                          {/* TODO:add link to items in the shopping list */}
-                          <h3 className="list-name">{shoppingList.name}</h3>
+                          <h3 className="list-name">
+                            {shoppingList.name}
+                            { localStorage.setItem('listName', shoppingList.name) }
+                          </h3>
                           <div className="list-group-item-text">
 
                             <div className="float-left">
@@ -94,6 +99,12 @@ class ShoppingListDashboard extends Component {
                             </div>
                             <div className="float-right">
                               <div className="action-btn">
+                                <Link to={`/shoppinglist/${shoppingList.id}/items`} className="link-btn">
+                                  <Button className="icon-btn">
+                                    <i className="fa fa-eye" />
+                                  </Button>
+                                </Link>
+                                {' '}
                                 <ToggleableShoppingListForm
                                   handleForm={updatedList => this.handleUpdateShoppingList(
                                     shoppingList.id, updatedList,
@@ -123,7 +134,7 @@ class ShoppingListDashboard extends Component {
                   handleForm={this.handleCreateShoppingList}
                 />
               </div>
-              <div className="panel-footer site-background">Panel Footer</div>
+              <div className="panel-footer site-background">@flacode</div>
             </div>
           </Container>
         </div>
