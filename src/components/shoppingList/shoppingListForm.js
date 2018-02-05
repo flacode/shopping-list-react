@@ -83,7 +83,11 @@ class ShoppingListForm extends Component {
                 value={this.state.fields.due_date}
                 onChange={this.handleInputChange}
                 labels
-                validate={val => (validator.isAfter(val) ? false : 'Date should not be before today.')}
+                validate={val => (
+                  new Date(Date.parse(val)).setHours(0, 0, 0, 0) >= new Date().setHours(0, 0, 0, 0) ?
+                  false :
+                  'Date should not be before today.'
+                )}
               />
             </ModalBody>
             <ModalFooter>
