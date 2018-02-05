@@ -86,6 +86,10 @@ class ItemForm extends Component {
                 name="name"
                 value={this.state.fields.name}
                 onChange={this.handleInputChange}
+                validate={(val) => {
+                  const letters = /^[0-9a-zA-Z ]+$/;
+                  return letters.test(val) ? false : 'Name should contain only numbers and letters';
+                }}
                 labels
               />
               <br />
@@ -104,6 +108,10 @@ class ItemForm extends Component {
                 name="bought_from"
                 value={this.state.fields.bought_from}
                 onChange={this.handleInputChange}
+                validate={(val) => {
+                  const letters = /^[0-9a-zA-Z ]+$/;
+                  return letters.test(val) ? false : 'Location should contain only numbers and letters';
+                }}
                 labels
               />
               <br />

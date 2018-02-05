@@ -73,6 +73,10 @@ class ShoppingListForm extends Component {
                 name="name"
                 value={this.state.fields.name}
                 onChange={this.handleInputChange}
+                validate={(val) => {
+                  const letters = /^[0-9a-zA-Z ]+$/;
+                  return letters.test(val) ? false : 'Name should contain only numbers and letters';
+                }}
                 labels
               />
               <br />
