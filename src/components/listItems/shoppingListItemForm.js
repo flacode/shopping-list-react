@@ -96,7 +96,7 @@ class ItemForm extends Component {
                 value={this.state.fields.quantity}
                 onChange={this.handleInputChange}
                 labels
-                validate={val => (validator.isFloat(val) ? false : 'Quantity should be a number.')}
+                validate={val => (validator.isFloat(val, { min: 0 }) ? false : 'Quantity should be a positive number.')}
               />
               <br />
               <Field
