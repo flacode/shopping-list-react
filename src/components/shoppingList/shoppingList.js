@@ -6,6 +6,7 @@ import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import Notifications, { notify } from 'react-notify-toast';
 import 'font-awesome/css/font-awesome.min.css';
+import { ClipLoader } from 'react-spinners';
 import Client from '../../client';
 import headerIcon from '../../imgs/header.png';
 import ToggleableShoppingListForm from './toggleForm';
@@ -18,6 +19,7 @@ class ShoppingListDashboard extends Component {
       currentPage: 1,
       totalLists: 0,
       searchKey: '',
+      loading: false,
     };
 
     componentDidMount() {
@@ -44,18 +46,27 @@ class ShoppingListDashboard extends Component {
     }
 
     serverData = (data) => {
-      if (data.message) this.setState(() => ({ serverMessage: data.message, shoppingLists: [] }));
+      if (data.message) {
+        this.setState(() =>
+          ({
+            serverMessage: data.message,
+            shoppingLists: [],
+            loading: false,
+          }));
+      }
       if (data.shopping_lists) {
         this.setState(() =>
           ({
             serverMessage: '',
             shoppingLists: data.shopping_lists,
             totalLists: data.total,
+            loading: false,
           }));
       }
     }
 
     loadShoppingListsFromServer = () => {
+      this.setState(() => ({ loading: true }));
       Client.getShoppingLists(this.serverData, this.serverError, 4, this.state.currentPage, this.state.searchKey);
     }
 
@@ -122,15 +133,29 @@ class ShoppingListDashboard extends Component {
                     </form>
                   </div>
                 </div>
-                <div className="list-group">
-                  {this.state.serverMessage &&
+                { this.state.loading ?
+                  <div className="list-group">
+                    <li className="list-group-item">
+                      <div className="row">
+                        <div className="offset-sm-5">
+                          <ClipLoader
+                            loading={this.state.loading}
+                            color="#22b49e"
+                            size={100}
+                          />
+                        </div>
+                      </div>
+                    </li>
+                  </div> :
+                  <div className="list-group">
+                    {this.state.serverMessage &&
                     <li className="list-group-item">
                       <p> {this.state.serverMessage} </p>
                     </li>
                     }
-                  {this.state.shoppingLists.length > 0 &&
-                  <div>
-                    { this.state.shoppingLists.map(shoppingList =>
+                    {this.state.shoppingLists.length > 0 &&
+                    <div>
+                      { this.state.shoppingLists.map(shoppingList =>
                       (
                         <li key={shoppingList.id} className="list-group-item">
                           <h3 className="list-name">
@@ -171,16 +196,17 @@ class ShoppingListDashboard extends Component {
                         </li>
                       ),
                     )}
-                  </div>
+                    </div>
                     }
-                </div>
+                  </div>
+                }
                 <ToggleableShoppingListForm
                   handleForm={this.handleCreateShoppingList}
                 />
                 <br />
                 <div className="row">
                   <div className="offset-sm-9">
-                    {this.state.totalLists &&
+                    {this.state.shoppingLists.length > 0 &&
                     <Pagination
                       total={this.state.totalLists}
                       pageSize={4}
