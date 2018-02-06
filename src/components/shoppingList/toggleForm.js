@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import 'font-awesome/css/font-awesome.min.css';
+import ReactTooltip from 'react-tooltip';
 import ShoppingListForm from './shoppingListForm';
 import '../../App.css';
 
@@ -27,9 +28,10 @@ class ToggleableShoppingListForm extends Component {
         <div>
           { this.props.updateList &&
           <div>
-            <Button className="icon-btn" onClick={this.toggle}>
+            <Button data-tip="Edit list" className="icon-btn" onClick={this.toggle}>
               <i className="fa fa-edit" />
             </Button>
+            <ReactTooltip place="top" type="dark" effect="solid" />
             <ShoppingListForm
               openModal={this.state.modal}
               handleToggle={this.toggle}

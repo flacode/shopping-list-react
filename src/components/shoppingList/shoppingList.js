@@ -5,8 +5,9 @@ import { Container, Button, Input } from 'reactstrap';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import Notifications, { notify } from 'react-notify-toast';
+import ReactTooltip from 'react-tooltip';
 import 'font-awesome/css/font-awesome.min.css';
-import { ClipLoader } from 'react-spinners';
+import { PropagateLoader } from 'react-spinners';
 import Client from '../../client';
 import headerIcon from '../../imgs/header.png';
 import ToggleableShoppingListForm from './toggleForm';
@@ -24,13 +25,6 @@ class ShoppingListDashboard extends Component {
 
     componentDidMount() {
       this.loadShoppingListsFromServer();
-
-      // reload list automatically every 1 minute
-      this.timer = setInterval(this.loadShoppingListsFromServer, 60000);
-    }
-
-    componentWillUnmount() {
-      clearInterval(this.timer);
     }
 
     // function to redirect user to login incase they are not authenticated
@@ -46,20 +40,21 @@ class ShoppingListDashboard extends Component {
     }
 
     serverData = (data) => {
-      if (data.message) {
-        this.setState(() =>
-          ({
-            serverMessage: data.message,
-            shoppingLists: [],
-            loading: false,
-          }));
-      }
       if (data.shopping_lists) {
         this.setState(() =>
           ({
             serverMessage: '',
             shoppingLists: data.shopping_lists,
             totalLists: data.total,
+            loading: false,
+          }));
+      }
+      if (data.message) {
+        this.setState(() =>
+          ({
+            currentPage: 1,
+            serverMessage: data.message,
+            shoppingLists: [],
             loading: false,
           }));
       }
@@ -73,11 +68,16 @@ class ShoppingListDashboard extends Component {
     handleCreateShoppingList = (shoppingList) => {
       Client.createShoppingList(shoppingList, this.serverError);
       this.loadShoppingListsFromServer();
+      this.setState(() => ({ loading: false }));
     }
 
     handleDeleteShoppingList = (shoppingListId) => {
-      Client.deleteShoppingList(shoppingListId, this.serverError);
-      this.loadShoppingListsFromServer();
+      const deleteItem = window.confirm('Are you sure you want to delete this shopping list?');
+      if (deleteItem) {
+        Client.deleteShoppingList(shoppingListId, this.serverError);
+        this.loadShoppingListsFromServer();
+      }
+      return false;
     }
 
     handleUpdateShoppingList = (shoppingListId, shoppingList) => {
@@ -117,16 +117,18 @@ class ShoppingListDashboard extends Component {
                   {localStorage.getItem('username')}
                   {'  '}
                   <Button
+                    data-tip="logout"
                     className="icon-btn"
                     onClick={() => Client.logoutUser(this.serverError, history)}
                   >
                     <i className="fa fa-sign-out" />
                   </Button>
+                  <ReactTooltip place="top" type="dark" effect="solid" />
                 </span>
               </div>
               <div className="panel-body">
                 <Notifications />
-                <div className="row">
+                <div className="row mt-2">
                   <div className="offset-sm-8">
                     <form onSubmit={this.handleSearch}>
                       <Input type="search" name="search" placeholder="Search" onChange={this.handleChange} />
@@ -137,11 +139,14 @@ class ShoppingListDashboard extends Component {
                   <div className="list-group">
                     <li className="list-group-item">
                       <div className="row">
-                        <div className="offset-sm-5">
-                          <ClipLoader
+                        <div className="offset-sm-4 list-name">
+                          <h4>Loading shopping lists</h4>
+                        </div>
+                        <div className="offset-sm-6 mb-5">
+                          <PropagateLoader
                             loading={this.state.loading}
                             color="#22b49e"
-                            size={100}
+                            size={15}
                           />
                         </div>
                       </div>
@@ -160,7 +165,6 @@ class ShoppingListDashboard extends Component {
                         <li key={shoppingList.id} className="list-group-item">
                           <h3 className="list-name">
                             {shoppingList.name}
-                            { localStorage.setItem('listName', shoppingList.name) }
                           </h3>
                           <div className="list-group-item-text">
                             <div className="float-left">
@@ -168,11 +172,17 @@ class ShoppingListDashboard extends Component {
                             </div>
                             <div className="float-right">
                               <div className="action-btn">
-                                <Link to={`/shoppinglist/${shoppingList.id}/items`} className="link-btn">
+                                <Link
+                                  to={`/shoppinglist/${shoppingList.id}/items`}
+                                  className="link-btn"
+                                  data-tip="View items"
+                                  onClick={() => { localStorage.setItem('listName', shoppingList.name); }}
+                                >
                                   <Button className="icon-btn">
                                     <i className="fa fa-eye" />
                                   </Button>
                                 </Link>
+                                <ReactTooltip place="top" type="dark" effect="solid" />
                                 {' '}
                                 <ToggleableShoppingListForm
                                   handleForm={updatedList => this.handleUpdateShoppingList(
@@ -185,10 +195,12 @@ class ShoppingListDashboard extends Component {
                                 {' '}
                                 <Button
                                   className="icon-btn"
+                                  data-tip="Delete list"
                                   onClick={() => this.handleDeleteShoppingList(shoppingList.id)}
                                 >
                                   <i className="fa fa-trash" />
                                 </Button>
+                                <ReactTooltip place="top" type="dark" effect="solid" />
                               </div>
                             </div>
                             <div className="clear-float" />

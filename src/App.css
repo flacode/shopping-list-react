@@ -132,7 +132,12 @@ html {
 .panel-footer.site-background,
 .modal-heading {
   background-color: rgb(34, 180, 158);
-  color: #F7F7F7
+  color: #F7F7F7;
+  padding: 5px;
+}
+
+.panel-heading.site-background{
+  height: 50px;
 }
 
 .list-group {
@@ -247,4 +252,8 @@ html {
   color: rgb(34, 180, 158);
   background-color: #fff;
   border-color: rgb(34, 180, 158);
+}
+
+.margin-items {
+  margin-top: 10px
 }

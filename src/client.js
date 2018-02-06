@@ -46,7 +46,7 @@ const getShoppingLists = (success, message, perPage, pageNo, searchKey) => {
   const config = {
     headers: { Authorization: localStorage.getItem('token') },
   };
-  axios.get(url, config)
+  return axios.get(url, config)
     .then(response => success(response.data))
     .catch(error => handleError(error, message));
 };
@@ -90,7 +90,7 @@ const getItems = (shoppingListId, successMessage, errorMessage) => {
   const config = {
     headers: { Authorization: localStorage.getItem('token') },
   };
-  axios.get(url, config)
+  return axios.get(url, config)
     .then(response => successMessage(response.data))
     .catch(error => handleError(error, errorMessage));
 };
