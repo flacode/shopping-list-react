@@ -14,6 +14,7 @@ import {
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Notifications, { notify } from 'react-notify-toast';
+import { ClipLoader } from 'react-spinners';
 import headerIcon from '../../imgs/header.png';
 import ToggleableItemForm from './toggleForm';
 import Client from '../../client';
@@ -26,6 +27,7 @@ class ItemDashBoard extends Component {
       serverMessage: '',
       viewList: false,
       trueCount: 0,
+      loading: false,
     };
     this.listId = '';
   }
@@ -62,6 +64,7 @@ class ItemDashBoard extends Component {
   }
 
   loadItemsFromServer = () => {
+    this.setState(() => ({ loading: true }));
     Client.getItems(this.listId, this.serverData, this.serverError);
   }
 
@@ -84,6 +87,7 @@ class ItemDashBoard extends Component {
     const { history } = this.props;
     return (
       <div>
+        { localStorage.getItem('token') === null && <Redirect to="/login" />}
         <Container className="list-page">
           <div className="panel panel-default">
             <div className="panel-heading site-background">
@@ -93,7 +97,10 @@ class ItemDashBoard extends Component {
                 {' '}
                 <Button
                   className="icon-btn"
-                  onClick={() => Client.logoutUser(this.serverError, history)}
+                  onClick={(event) => {
+                  event.preventDefault();
+                  Client.logoutUser(this.serverError, history);
+                }}
                 >
                   <i className="fa fa-sign-out" />
                 </Button>
@@ -113,11 +120,25 @@ class ItemDashBoard extends Component {
                 value={Math.floor((this.state.trueCount / this.state.items.length) * 100)}
               >Items bought
               </Progress>
-              <div className="list-group">
-                { this.state.items.length <= 0 ?
+              { this.state.loading ?
+                <div className="list-group">
                   <li className="list-group-item">
-                    <p> {this.state.serverMessage} </p>
-                  </li> :
+                    <div className="row">
+                      <div className="offset-sm-5">
+                        <ClipLoader
+                          loading={this.state.loading}
+                          color="#22b49e"
+                          size={100}
+                        />
+                      </div>
+                    </div>
+                  </li>
+                </div> :
+                <div className="list-group">
+                  { this.state.items.length <= 0 ?
+                    <li className="list-group-item">
+                      <p> {this.state.serverMessage} </p>
+                    </li> :
                     this.state.items.map(item => (
                       <li key={item.id} className="list-group-item">
                         <div className="float-left">
@@ -139,7 +160,10 @@ class ItemDashBoard extends Component {
                               <ModalBody>
                                 <p><b>Quantity:</b> {item.quantity}</p>
                                 <p><b>Bought from:</b> {item.bought_from}</p>
-                                <p><b>Status: </b> {item.status ? <span className="glyphicon glyphicon-check bought" /> : <span className="glyphicon glyphicon-unchecked not-bought" />}</p>
+                                <p><b>Status: </b> {item.status ?
+                                  <span className="glyphicon glyphicon-check bought" /> :
+                                  <span className="glyphicon glyphicon-unchecked not-bought" />}
+                                </p>
                               </ModalBody>
                               <ModalFooter>
                                 <Button className="btn-auth" onClick={this.toggle}>Close</Button>
@@ -168,7 +192,8 @@ class ItemDashBoard extends Component {
                     ),
                   )
                   }
-              </div>
+                </div>
+              }
               <ToggleableItemForm handleForm={this.handleCreateItem} />
             </div>
             <div className="panel-footer site-background">@flacode</div>
@@ -185,6 +210,7 @@ ItemDashBoard.propTypes = {
       listId: PropTypes.string,
     }).isRequired,
   }).isRequired,
+  history: PropTypes.object,
 };
 
 export default ItemDashBoard;

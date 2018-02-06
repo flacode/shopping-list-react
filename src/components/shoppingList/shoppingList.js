@@ -1,9 +1,12 @@
 /* shopping list component to display shopping lists in a table */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Button } from 'reactstrap';
+import { Container, Button, Input } from 'reactstrap';
+import Pagination from 'rc-pagination';
+import 'rc-pagination/assets/index.css';
 import Notifications, { notify } from 'react-notify-toast';
 import 'font-awesome/css/font-awesome.min.css';
+import { ClipLoader } from 'react-spinners';
 import Client from '../../client';
 import headerIcon from '../../imgs/header.png';
 import ToggleableShoppingListForm from './toggleForm';
@@ -13,6 +16,10 @@ class ShoppingListDashboard extends Component {
     state = {
       shoppingLists: [],
       serverMessage: '',
+      currentPage: 1,
+      totalLists: 0,
+      searchKey: '',
+      loading: false,
     };
 
     componentDidMount() {
@@ -29,16 +36,38 @@ class ShoppingListDashboard extends Component {
     // function to redirect user to login incase they are not authenticated
     serverError = (message) => {
       const { history } = this.props;
-      return localStorage.getItem('token') === null ? history.push('/login') : notify.show(message, 'error');
+      return localStorage.getItem('token') === null ?
+        history.push(
+          {
+            pathname: '/login',
+            state: { errorMessage: message },
+          }) :
+        notify.show(message, 'error');
     }
 
     serverData = (data) => {
-      if (data.message) this.setState(() => ({ serverMessage: data.message, shoppingLists: [] }));
-      if (data.shopping_lists) this.setState(() => ({ serverMessage: '', shoppingLists: data.shopping_lists }));
+      if (data.message) {
+        this.setState(() =>
+          ({
+            serverMessage: data.message,
+            shoppingLists: [],
+            loading: false,
+          }));
+      }
+      if (data.shopping_lists) {
+        this.setState(() =>
+          ({
+            serverMessage: '',
+            shoppingLists: data.shopping_lists,
+            totalLists: data.total,
+            loading: false,
+          }));
+      }
     }
 
     loadShoppingListsFromServer = () => {
-      Client.getShoppingLists(this.serverData, this.serverError);
+      this.setState(() => ({ loading: true }));
+      Client.getShoppingLists(this.serverData, this.serverError, 4, this.state.currentPage, this.state.searchKey);
     }
 
     handleCreateShoppingList = (shoppingList) => {
@@ -53,6 +82,26 @@ class ShoppingListDashboard extends Component {
 
     handleUpdateShoppingList = (shoppingListId, shoppingList) => {
       Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
+      this.loadShoppingListsFromServer();
+    }
+
+    pageChange = (page) => {
+      // use page directly to get the lists on that page
+      Client.getShoppingLists(this.serverData, this.serverError, 4, page);
+      this.setState(() => ({
+        currentPage: page,
+      }));
+    }
+
+    handleChange = (event) => {
+      const { value } = event.target;
+      this.setState(() => ({
+        searchKey: value,
+      }));
+    }
+
+    handleSearch = (event) => {
+      event.preventDefault();
       this.loadShoppingListsFromServer();
     }
 
@@ -77,15 +126,36 @@ class ShoppingListDashboard extends Component {
               </div>
               <div className="panel-body">
                 <Notifications />
-                <div className="list-group">
-                  {this.state.serverMessage &&
+                <div className="row">
+                  <div className="offset-sm-8">
+                    <form onSubmit={this.handleSearch}>
+                      <Input type="search" name="search" placeholder="Search" onChange={this.handleChange} />
+                    </form>
+                  </div>
+                </div>
+                { this.state.loading ?
+                  <div className="list-group">
+                    <li className="list-group-item">
+                      <div className="row">
+                        <div className="offset-sm-5">
+                          <ClipLoader
+                            loading={this.state.loading}
+                            color="#22b49e"
+                            size={100}
+                          />
+                        </div>
+                      </div>
+                    </li>
+                  </div> :
+                  <div className="list-group">
+                    {this.state.serverMessage &&
                     <li className="list-group-item">
                       <p> {this.state.serverMessage} </p>
                     </li>
                     }
-                  {this.state.shoppingLists.length > 0 &&
-                  <div>
-                    { this.state.shoppingLists.map(shoppingList =>
+                    {this.state.shoppingLists.length > 0 &&
+                    <div>
+                      { this.state.shoppingLists.map(shoppingList =>
                       (
                         <li key={shoppingList.id} className="list-group-item">
                           <h3 className="list-name">
@@ -93,7 +163,6 @@ class ShoppingListDashboard extends Component {
                             { localStorage.setItem('listName', shoppingList.name) }
                           </h3>
                           <div className="list-group-item-text">
-
                             <div className="float-left">
                               Due date: { shoppingList.due_date }
                             </div>
@@ -127,12 +196,26 @@ class ShoppingListDashboard extends Component {
                         </li>
                       ),
                     )}
-                  </div>
+                    </div>
                     }
-                </div>
+                  </div>
+                }
                 <ToggleableShoppingListForm
                   handleForm={this.handleCreateShoppingList}
                 />
+                <br />
+                <div className="row">
+                  <div className="offset-sm-9">
+                    {this.state.shoppingLists.length > 0 &&
+                    <Pagination
+                      total={this.state.totalLists}
+                      pageSize={4}
+                      onChange={this.pageChange}
+                      current={this.state.currentPage}
+                      hideOnSinglePage
+                    />}
+                  </div>
+                </div>
               </div>
               <div className="panel-footer site-background">@flacode</div>
             </div>

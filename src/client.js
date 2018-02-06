@@ -1,8 +1,8 @@
 import axios from 'axios/lib/axios';
 import { notify } from 'react-notify-toast';
 
-// const BASE_URL = 'https://deployment-shopping-list-api.herokuapp.com/api';
-const BASE_URL = 'http://127.0.0.1:5000/api';
+const BASE_URL = 'https://deployment-shopping-list-api.herokuapp.com/api';
+// const BASE_URL = 'http://127.0.0.1:5000/api';
 let url;
 
 const handleError = (error, errorMessage) => {
@@ -40,8 +40,9 @@ const loginUser = (user, successMessage, errorMessage) => {
 };
 
 // API call to return shopping lists from the server
-const getShoppingLists = (success, message) => {
-  url = `${BASE_URL}/shoppinglists/`;
+const getShoppingLists = (success, message, perPage, pageNo, searchKey) => {
+  if (searchKey) url = `${BASE_URL}/shoppinglists/?q=${searchKey}&limit=${perPage}&page=${pageNo}`;
+  else url = `${BASE_URL}/shoppinglists/?limit=${perPage}&page=${pageNo}`;
   const config = {
     headers: { Authorization: localStorage.getItem('token') },
   };
