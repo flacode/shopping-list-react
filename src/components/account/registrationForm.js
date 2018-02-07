@@ -77,7 +77,7 @@ class RegistrationForm extends Component {
 
     // function to handle a successful API operation
     successServer = (message) => {
-      const { history } = this.props;      
+      const { history } = this.props;
       this.setState(() => ({
         loading: false,
         server: {

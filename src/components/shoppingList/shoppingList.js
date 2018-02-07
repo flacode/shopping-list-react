@@ -57,6 +57,7 @@ class ShoppingListDashboard extends Component {
             shoppingLists: [],
             loading: false,
           }));
+        this.pageChange(1);
       }
     }
 
@@ -67,22 +68,21 @@ class ShoppingListDashboard extends Component {
 
     handleCreateShoppingList = (shoppingList) => {
       Client.createShoppingList(shoppingList, this.serverError);
-      this.loadShoppingListsFromServer();
-      this.setState(() => ({ loading: false }));
+      setTimeout(() => this.loadShoppingListsFromServer(), 300);
     }
 
     handleDeleteShoppingList = (shoppingListId) => {
       const deleteItem = window.confirm('Are you sure you want to delete this shopping list?');
       if (deleteItem) {
         Client.deleteShoppingList(shoppingListId, this.serverError);
-        this.loadShoppingListsFromServer();
+        setTimeout(() => this.loadShoppingListsFromServer(), 300);
       }
       return false;
     }
 
     handleUpdateShoppingList = (shoppingListId, shoppingList) => {
       Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
-      this.loadShoppingListsFromServer();
+      setTimeout(() => this.loadShoppingListsFromServer(), 300);
     }
 
     pageChange = (page) => {
@@ -218,14 +218,13 @@ class ShoppingListDashboard extends Component {
                 <br />
                 <div className="row">
                   <div className="offset-sm-9">
-                    {this.state.shoppingLists.length > 0 &&
                     <Pagination
                       total={this.state.totalLists}
                       pageSize={4}
                       onChange={this.pageChange}
                       current={this.state.currentPage}
                       hideOnSinglePage
-                    />}
+                    />
                   </div>
                 </div>
               </div>

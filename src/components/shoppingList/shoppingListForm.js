@@ -8,7 +8,6 @@ import {
   ModalBody,
   ModalFooter,
 } from 'reactstrap';
-import validator from 'validator';
 import Field from '../field';
 import '../../App.css';
 

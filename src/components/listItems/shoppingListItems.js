@@ -57,21 +57,21 @@ class ItemDashBoard extends Component {
 
   handleCreateItem = (item) => {
     Client.addItems(this.listId, item, this.serverError);
-    this.loadItemsFromServer();
+    setTimeout(() => this.loadItemsFromServer(), 300);
   }
 
   handleDeleteItem = (itemId) => {
     const deleteItem = window.confirm('Are you sure you want to delete this item?');
     if (deleteItem) {
       Client.deleteItems(this.listId, itemId, this.serverError);
-      this.loadItemsFromServer();
+      setTimeout(() => this.loadItemsFromServer(), 300);
     }
     return false;
   }
 
   handleUpdateItem = (itemId, item) => {
     Client.updateItems(this.listId, itemId, item, this.serverError);
-    this.loadItemsFromServer();
+    setTimeout(() => this.loadItemsFromServer(), 300);
   }
 
   render() {

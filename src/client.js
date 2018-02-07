@@ -47,8 +47,8 @@ const getShoppingLists = (success, message, perPage, pageNo, searchKey) => {
     headers: { Authorization: localStorage.getItem('token') },
   };
   return axios.get(url, config)
-    .then(response => success(response.data))
-    .catch(error => handleError(error, message));
+    .then(responseGot => success(responseGot.data))
+    .catch(errorGot => handleError(errorGot, message));
 };
 
 // API call to create shopping list
