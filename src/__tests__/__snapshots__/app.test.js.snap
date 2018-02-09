@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<App /> has a valid snapshot 1`] = `
+<div>
+  <div
+    className="container"
+  >
+    <div
+      className="card-container card"
+    >
+      <h5
+        className="thick-heading card-title"
+      >
+        SHOPPING LIST
+      </h5>
+      <img
+        alt="Card image cap"
+        className="img-card card-img"
+        src="shoppinglist.png"
+      />
+      <div
+        className="card-body"
+      >
+        <h3
+          className="name-card"
+        >
+          Sign up
+        </h3>
+        
+        <form
+          className="form-signin"
+        >
+          <div
+            className="form-group"
+          >
+            <div>
+              <input
+                className="form-control"
+                name="username"
+                onChange={[Function]}
+                placeholder="Username"
+                type=""
+                value=""
+              />
+              <div
+                className="invalid-feedback"
+              />
+            </div>
+          </div>
+          <div
+            className="form-group"
+          >
+            <div>
+              <input
+                className="form-control"
+                name="email"
+                onChange={[Function]}
+                placeholder="Email"
+                type="email"
+                value=""
+              />
+              <div
+                className="invalid-feedback"
+              />
+            </div>
+          </div>
+          <div
+            className="form-group"
+          >
+            <div>
+              <input
+                className="form-control"
+                name="password"
+                onChange={[Function]}
+                placeholder="Password"
+                type="password"
+                value=""
+              />
+              <div
+                className="invalid-feedback"
+              />
+            </div>
+          </div>
+          <div
+            className="form-group"
+          >
+            <div>
+              <input
+                className="form-control"
+                name="confirmPassword"
+                onChange={[Function]}
+                placeholder="Confirm Password"
+                type="password"
+                value=""
+              />
+              <div
+                className="invalid-feedback"
+              />
+            </div>
+          </div>
+          <div
+            className="btn-center"
+          >
+            <button
+              className="btn-auth btn btn-secondary disabled"
+              disabled={true}
+              onClick={[Function]}
+              type="button"
+            >
+              Submit
+            </button>
+             
+            <button
+              className="btn-auth btn btn-secondary"
+              onClick={[Function]}
+              type="button"
+            >
+              Reset
+            </button>
+          </div>
+        </form>
+        <br />
+        <p
+          className="login"
+        >
+          Already have an account, please 
+          <a
+            className="auth-link"
+            href="/login"
+            onClick={[Function]}
+          >
+            login
+          </a>
+          .
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
