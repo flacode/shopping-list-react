@@ -178,7 +178,7 @@ class RegistrationForm extends Component {
                     * disable the button when sending data to the server.
                     * avoid multiple submissions
                     * avoid submitting invalid data
-                */ }
+                    */ }
                   <div className="btn-center">
                     <Button
                       className="btn-auth"

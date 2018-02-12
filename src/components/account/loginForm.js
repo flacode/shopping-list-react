@@ -31,6 +31,7 @@ class LoginForm extends React.Component {
       },
     }
 
+    // handle form submission
     onFormSubmit = (event) => {
       event.preventDefault();
       const user = this.state.fields;
@@ -40,6 +41,7 @@ class LoginForm extends React.Component {
       Client.loginUser(user, this.successServer, this.errorServer);
     }
 
+    // handle input change event
     handleInputChange = ({ name, value }) => {
       const fields = { [name]: value };
       fields[name] = value;

@@ -23,6 +23,7 @@ class ShoppingListDashboard extends Component {
       loading: false,
     };
 
+    // get shopping lists from the server after component has mounted.
     componentDidMount() {
       this.loadShoppingListsFromServer();
     }
@@ -39,6 +40,7 @@ class ShoppingListDashboard extends Component {
         notify.show(message, 'error');
     }
 
+    // function to handle successful API calls
     serverData = (data) => {
       if (data.shopping_lists) {
         this.setState(() =>
@@ -61,16 +63,19 @@ class ShoppingListDashboard extends Component {
       }
     }
 
+    // function to handle make API call for getting shopping lists from the server
     loadShoppingListsFromServer = () => {
       this.setState(() => ({ loading: true }));
       Client.getShoppingLists(this.serverData, this.serverError, 4, this.state.currentPage, this.state.searchKey);
     }
 
+    // function to make API call to create new shopping list
     handleCreateShoppingList = (shoppingList) => {
       Client.createShoppingList(shoppingList, this.serverError);
       setTimeout(() => this.loadShoppingListsFromServer(), 300);
     }
 
+    // function to make API call to delete shopping list
     handleDeleteShoppingList = (shoppingListId) => {
       const deleteItem = window.confirm('Are you sure you want to delete this shopping list?');
       if (deleteItem) {
@@ -80,6 +85,7 @@ class ShoppingListDashboard extends Component {
       return false;
     }
 
+    // function to make API call to update shopping list item
     handleUpdateShoppingList = (shoppingListId, shoppingList) => {
       Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
       setTimeout(() => this.loadShoppingListsFromServer(), 300);
@@ -93,6 +99,7 @@ class ShoppingListDashboard extends Component {
       }));
     }
 
+    // function to handle change in user input for search functionality
     handleChange = (event) => {
       const { value } = event.target;
       this.setState(() => ({
@@ -100,6 +107,7 @@ class ShoppingListDashboard extends Component {
       }));
     }
 
+    // function to make API call to get shopping lists that match search key
     handleSearch = (event) => {
       event.preventDefault();
       this.loadShoppingListsFromServer();

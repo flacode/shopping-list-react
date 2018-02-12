@@ -39,6 +39,7 @@ class ItemDashBoard extends Component {
     return localStorage.getItem('token') === null ? history.push('/login') : notify.show(message, 'error');
   }
 
+  // function to handle successful API calls
   serverData = (data) => {
     if (data.message) this.setState(() => ({ serverMessage: data.message, items: [], loading: false }));
     if (data.Items) {
@@ -50,16 +51,19 @@ class ItemDashBoard extends Component {
     }
   }
 
+  // function to make API call to load items from the server
   loadItemsFromServer = () => {
     this.setState(() => ({ loading: true }));
     Client.getItems(this.listId, this.serverData, this.serverError);
   }
 
+  // function to make API call to add items to shopping list
   handleCreateItem = (item) => {
     Client.addItems(this.listId, item, this.serverError);
     setTimeout(() => this.loadItemsFromServer(), 300);
   }
 
+  // function to make API call to delete items from the shopping list
   handleDeleteItem = (itemId) => {
     const deleteItem = window.confirm('Are you sure you want to delete this item?');
     if (deleteItem) {
@@ -69,6 +73,7 @@ class ItemDashBoard extends Component {
     return false;
   }
 
+  // function to make API call to update item in a shopping list
   handleUpdateItem = (itemId, item) => {
     Client.updateItems(this.listId, itemId, item, this.serverError);
     setTimeout(() => this.loadItemsFromServer(), 300);
