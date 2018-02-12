@@ -77,12 +77,14 @@ class RegistrationForm extends Component {
 
     // function to handle a successful API operation
     successServer = (message) => {
+      const { history } = this.props;
       this.setState(() => ({
         loading: false,
         server: {
           error: false,
         },
       }));
+      history.push('/login');
       notify.show(message, 'success');
     }
 
@@ -108,6 +110,7 @@ class RegistrationForm extends Component {
         return false;
       }
 
+      // Redirect to shopping lists component once a user has a valid token in the session
       render() {
         return (
           <Container>

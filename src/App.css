@@ -132,7 +132,12 @@ html {
 .panel-footer.site-background,
 .modal-heading {
   background-color: rgb(34, 180, 158);
-  color: #F7F7F7
+  color: #F7F7F7;
+  padding: 5px;
+}
+
+.panel-heading.site-background{
+  height: 50px;
 }
 
 .list-group {
@@ -154,11 +159,6 @@ html {
 .list-details {
   text-align: left;
 }
-
-/* center a button{
-  margin:auto;
-  display:block;
-}*/
 
 .action-btn *{
   display:inline;
@@ -204,4 +204,56 @@ html {
 
 .bought {
   color: rgb(34, 180, 158);
+}
+.rc-pagination-item {
+  color: rgb(34, 180, 158);
+  border-color: rgb(34, 180, 158);
+}
+.rc-pagination-item a {
+  text-decoration: none;
+  color: rgb(103, 132, 143);
+}
+.rc-pagination-item:hover {
+  border-color: rgb(34, 180, 158);
+}
+.rc-pagination-item:hover a {
+  color: rgb(34, 180, 158);
+}
+.rc-pagination-item-active {
+  background-color: rgb(34, 180, 158);
+  border-color: rgb(34, 180, 158);
+  color: #fff;
+}
+
+.rc-pagination-jump-prev:hover:after,
+.rc-pagination-jump-next:hover:after {
+  color: rgb(34, 180, 158);
+}
+
+.rc-pagination-options-quick-jumper input:hover {
+  border-color: rgb(34, 180, 158);
+}
+
+.rc-pagination-options-quick-jumper button:hover,
+.rc-pagination-options-quick-jumper button:active,
+.rc-pagination-options-quick-jumper button:focus {
+  color: rgb(34, 180, 158);
+  background-color: #fff;
+  border-color: rgb(34, 180, 158);
+}
+
+.rc-pagination-simple .rc-pagination-simple-pager input:hover {
+  border-color: rgb(34, 180, 158);
+}
+
+.rc-pagination-simple .rc-pagination-simple-pager button:hover,
+.rc-pagination-simple .rc-pagination-simple-pager button:active,
+.rc-pagination-simple .rc-pagination-simple-pager button:focus {
+  color: rgb(34, 180, 158);
+  background-color: #fff;
+  border-color: rgb(34, 180, 158);
+}
+
+.margin-items {
+  margin-top: 10px
 }

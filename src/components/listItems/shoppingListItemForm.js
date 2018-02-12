@@ -67,7 +67,7 @@ class ItemForm extends Component {
       this.setState(() => ({
         fields: {
           name: '',
-          quantity: 0.00,
+          quantity: 0,
           status: false,
           bought_from: '',
         },
@@ -86,6 +86,10 @@ class ItemForm extends Component {
                 name="name"
                 value={this.state.fields.name}
                 onChange={this.handleInputChange}
+                validate={(val) => {
+                  const letters = /^[0-9a-zA-Z ]+$/;
+                  return letters.test(val) ? false : 'Name should contain only numbers and letters';
+                }}
                 labels
               />
               <br />
@@ -96,7 +100,7 @@ class ItemForm extends Component {
                 value={this.state.fields.quantity}
                 onChange={this.handleInputChange}
                 labels
-                validate={val => (validator.isFloat(val) ? false : 'Quantity should be a number.')}
+                validate={val => (validator.isFloat(val, { min: 0 }) ? false : 'Quantity should be a positive number.')}
               />
               <br />
               <Field
@@ -104,6 +108,10 @@ class ItemForm extends Component {
                 name="bought_from"
                 value={this.state.fields.bought_from}
                 onChange={this.handleInputChange}
+                validate={(val) => {
+                  const letters = /^[0-9a-zA-Z ]+$/;
+                  return letters.test(val) ? false : 'Location should contain only numbers and letters';
+                }}
                 labels
               />
               <br />

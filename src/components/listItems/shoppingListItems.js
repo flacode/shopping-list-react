@@ -3,17 +3,14 @@ import React, { Component } from 'react';
 import {
   Container,
   Button,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalFooter,
   Breadcrumb,
   BreadcrumbItem,
-  Progress,
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Notifications, { notify } from 'react-notify-toast';
+import ReactTooltip from 'react-tooltip';
+import { PropagateLoader } from 'react-spinners';
 import headerIcon from '../../imgs/header.png';
 import ToggleableItemForm from './toggleForm';
 import Client from '../../client';
@@ -24,8 +21,8 @@ class ItemDashBoard extends Component {
     this.state = {
       items: [],
       serverMessage: '',
-      viewList: false,
-      trueCount: 0,
+      loading: false,
+      listName: localStorage.getItem('listName'),
     };
     this.listId = '';
   }
@@ -34,17 +31,6 @@ class ItemDashBoard extends Component {
     const { match: { params } } = this.props;
     this.listId = params.listId;
     this.loadItemsFromServer();
-
-    // reload list automatically every 1 minute
-    this.timer = setInterval(this.loadShoppingListsFromServer, 60000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  toggle = () => {
-    this.setState(prevState => ({ viewList: !prevState.viewList }));
   }
 
   // function to redirect user to login incase they are not authenticated
@@ -54,36 +40,45 @@ class ItemDashBoard extends Component {
   }
 
   serverData = (data) => {
-    if (data.message) this.setState(() => ({ serverMessage: data.message, items: [] }));
+    if (data.message) this.setState(() => ({ serverMessage: data.message, items: [], loading: false }));
     if (data.Items) {
-      const count = data.Items.map(item => item.status).filter(v => v).length;
-      this.setState(() => ({ serverMessage: '', items: data.Items, trueCount: count }));
+      this.setState(() => ({
+        serverMessage: '',
+        items: data.Items,
+        loading: false,
+      }));
     }
   }
 
   loadItemsFromServer = () => {
+    this.setState(() => ({ loading: true }));
     Client.getItems(this.listId, this.serverData, this.serverError);
   }
 
   handleCreateItem = (item) => {
     Client.addItems(this.listId, item, this.serverError);
-    this.loadItemsFromServer();
+    setTimeout(() => this.loadItemsFromServer(), 300);
   }
 
   handleDeleteItem = (itemId) => {
-    Client.deleteItems(this.listId, itemId, this.serverError);
-    this.loadItemsFromServer();
+    const deleteItem = window.confirm('Are you sure you want to delete this item?');
+    if (deleteItem) {
+      Client.deleteItems(this.listId, itemId, this.serverError);
+      setTimeout(() => this.loadItemsFromServer(), 300);
+    }
+    return false;
   }
 
   handleUpdateItem = (itemId, item) => {
     Client.updateItems(this.listId, itemId, item, this.serverError);
-    this.loadItemsFromServer();
+    setTimeout(() => this.loadItemsFromServer(), 300);
   }
 
   render() {
     const { history } = this.props;
     return (
       <div>
+        { localStorage.getItem('token') === null && <Redirect to="/login" />}
         <Container className="list-page">
           <div className="panel panel-default">
             <div className="panel-heading site-background">
@@ -92,11 +87,16 @@ class ItemDashBoard extends Component {
                 {localStorage.getItem('username')}
                 {' '}
                 <Button
+                  data-tip="logout"
                   className="icon-btn"
-                  onClick={() => Client.logoutUser(this.serverError, history)}
+                  onClick={(event) => {
+                  event.preventDefault();
+                  Client.logoutUser(this.serverError, history);
+                }}
                 >
                   <i className="fa fa-sign-out" />
                 </Button>
+                <ReactTooltip place="top" type="dark" effect="solid" />
               </span>
             </div>
             <div className="panel-body">
@@ -105,19 +105,30 @@ class ItemDashBoard extends Component {
                 <BreadcrumbItem>
                   <Link className="list-name" to="/shoppinglists">Home</Link>
                 </BreadcrumbItem>
-                <BreadcrumbItem active tag="span">{localStorage.getItem('listName')}</BreadcrumbItem>
+                <BreadcrumbItem active tag="span">{this.state.listName}</BreadcrumbItem>
               </Breadcrumb>
-              <Progress
-                animated
-                color="info"
-                value={Math.floor((this.state.trueCount / this.state.items.length) * 100)}
-              >Items bought
-              </Progress>
-              <div className="list-group">
-                { this.state.items.length <= 0 ?
+              { this.state.loading ?
+                <div className="list-group">
                   <li className="list-group-item">
-                    <p> {this.state.serverMessage} </p>
-                  </li> :
+                    <div className="row">
+                      <div className="offset-sm-4 list-name">
+                        <h4>Loading shopping list items</h4>
+                      </div>
+                      <div className="offset-sm-6 mb-5">
+                        <PropagateLoader
+                          loading={this.state.loading}
+                          color="#22b49e"
+                          size={15}
+                        />
+                      </div>
+                    </div>
+                  </li>
+                </div> :
+                <div className="list-group">
+                  { this.state.items.length <= 0 ?
+                    <li className="list-group-item">
+                      <p> {this.state.serverMessage} </p>
+                    </li> :
                     this.state.items.map(item => (
                       <li key={item.id} className="list-group-item">
                         <div className="float-left">
@@ -125,27 +136,15 @@ class ItemDashBoard extends Component {
                             <s className="label-text"><h3 className="list-name">{item.name}</h3></s> :
                             <h3 className="list-name">{item.name}</h3>
                           }
+                          <p><b>Quantity:</b> {item.quantity}{'  '}
+                            <b>Bought from:</b> {item.bought_from ? item.bought_from : 'None' }{'  '}
+                            <b>Status: </b> {item.status ?
+                              <span className="list-name"><i className="fa fa-check" /></span> :
+                              <span className="not-bought"><i className="fa fa-check" /></span>}
+                          </p>
                         </div>
                         <div className="float-right">
                           <div className="action-btn">
-                            <Button
-                              className="icon-btn"
-                              onClick={this.toggle}
-                            >
-                              <i className="fa fa-eye" />
-                            </Button>
-                            <Modal isOpen={this.state.viewList} toggle={this.toggle}>
-                              <ModalHeader className="modal-heading">{item.name.toUpperCase()}</ModalHeader>
-                              <ModalBody>
-                                <p><b>Quantity:</b> {item.quantity}</p>
-                                <p><b>Bought from:</b> {item.bought_from}</p>
-                                <p><b>Status: </b> {item.status ? <span className="glyphicon glyphicon-check bought" /> : <span className="glyphicon glyphicon-unchecked not-bought" />}</p>
-                              </ModalBody>
-                              <ModalFooter>
-                                <Button className="btn-auth" onClick={this.toggle}>Close</Button>
-                              </ModalFooter>
-                            </Modal>
-                            { ' '}
                             <ToggleableItemForm
                               handleForm={updatedItem => this.handleUpdateItem(item.id, updatedItem)}
                               name={item.name}
@@ -156,11 +155,13 @@ class ItemDashBoard extends Component {
                             />
                             {' '}
                             <Button
+                              data-tip="Delete item"
                               className="icon-btn"
                               onClick={() => this.handleDeleteItem(item.id)}
                             >
                               <i className="fa fa-trash" />
                             </Button>
+                            <ReactTooltip place="top" type="dark" effect="solid" />
                           </div>
                         </div>
                         <div className="clear-float" />
@@ -168,7 +169,8 @@ class ItemDashBoard extends Component {
                     ),
                   )
                   }
-              </div>
+                </div>
+              }
               <ToggleableItemForm handleForm={this.handleCreateItem} />
             </div>
             <div className="panel-footer site-background">@flacode</div>
@@ -185,6 +187,7 @@ ItemDashBoard.propTypes = {
       listId: PropTypes.string,
     }).isRequired,
   }).isRequired,
+  history: PropTypes.object,
 };
 
 export default ItemDashBoard;
