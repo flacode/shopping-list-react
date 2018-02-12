@@ -1,8 +1,9 @@
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import { notify } from 'react-notify-toast';
 
 configure({ adapter: new Adapter() });
-
+notify.show = jest.fn();
 class LocalStorageMock {
   constructor() {
     this.store = {};
@@ -26,3 +27,4 @@ class LocalStorageMock {
 }
 
 global.localStorage = new LocalStorageMock();
+

@@ -5,11 +5,14 @@
   "dependencies": {
     "axios": "^0.17.1",
     "bootstrap": "^4.0.0",
+    "coveralls": "^3.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "font-awesome": "^4.7.0",
+    "history": "^4.7.2",
     "jquery": "^3.3.1",
     "material-ui": "^0.20.0",
+    "mockdate": "^2.0.2",
     "popper": "^1.0.1",
     "popper.js": "^1.13.0",
     "prop-types": "^15.6.0",
@@ -29,6 +32,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom --setupTestFrameworkScriptFile=raf/polyfill --coverage",
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
