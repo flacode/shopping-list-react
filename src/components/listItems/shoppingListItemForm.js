@@ -129,7 +129,6 @@ class ItemForm extends Component {
                     onChange={this.handleCheck}
                     checked={this.state.fields.status}
                   />
-                  { this.state.error && <div className="form-error">{this.state.error}</div>}
                 </div>
               </div>
             </ModalBody>

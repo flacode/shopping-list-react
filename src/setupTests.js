@@ -4,6 +4,8 @@ import { notify } from 'react-notify-toast';
 
 configure({ adapter: new Adapter() });
 notify.show = jest.fn();
+global.deleteItem = jest.fn();
+
 class LocalStorageMock {
   constructor() {
     this.store = {};

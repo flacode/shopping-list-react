@@ -14,12 +14,13 @@ history.push = jest.fn();
 describe('<RegistrationForm />', () => {
   let wrapper;
   beforeEach(() => {
+    localStorage.setItem('token', 'dhdhjdhjdhfdhdhjdhj');
     wrapper = shallow(<RegistrationForm history={history} />);
   });
   it('renders without crashing', () => {
     shallow(<RegistrationForm />);
   });
-  it('has a valid snapshot', () => {
+  it('has a valid snapshot with token', () => {
     const component = renderer.create(
       withRouter(<RegistrationForm />));
     const tree = component.toJSON();
@@ -140,6 +141,8 @@ describe('<RegistrationForm />', () => {
       });
     });
   });
+
+  // it('redirects when there is no token')
   afterEach(() => {
     Client.registerUser.mockClear();
   });

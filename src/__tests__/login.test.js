@@ -44,6 +44,10 @@ describe('<LoginForm />', () => {
     wrapper.instance().successServer('Login message');
     expect(localStorage.getItem('username')).toEqual('joan');
   });
+  it('`errorServer()` sets error message', () => {
+    wrapper.instance().errorServer('Network error');
+    expect(wrapper.state().server.message).toEqual('Network error');
+  });
   afterEach(() => {
     Client.registerUser.mockClear();
   });
