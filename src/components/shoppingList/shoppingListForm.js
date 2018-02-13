@@ -32,11 +32,10 @@ class ShoppingListForm extends Component {
 
     // function to perform client side validation
     validate = () => {
-      // const list = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
+      const { fieldErrors, fields } = this.state;
       const errMessages = Object.keys(fieldErrors).filter(key => fieldErrors[key]);
-      // if (!list.name) return true;
-      // if (!list.due_date) return true;
+      if (!fields.name) return true;
+      if (!fields.due_date) return true;
       if (errMessages.length > 0) return true;
       return false;
     }
@@ -46,11 +45,12 @@ class ShoppingListForm extends Component {
      * Toggle the form to close it
     */
     handleFormSubmit = (event) => {
+      const { name, due_date } = this.state.fields;
       event.preventDefault();
       if (this.validate()) return;
       this.props.handleFormSubmitted({
-        name: this.state.fields.name,
-        due_date: this.state.fields.due_date,
+        name,
+        due_date,
       });
       this.setState(() => ({
         fields: {

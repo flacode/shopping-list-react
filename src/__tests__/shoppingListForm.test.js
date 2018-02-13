@@ -64,10 +64,13 @@ describe('<ShoppingListForm />', () => {
   });
   it('`validate()` returns false without form errors', () => {
     wrapper.instance().handleInputChange({ name: 'name', value: 'listname', error: false });
+    wrapper.instance().handleInputChange({ name: 'due_date', value: '2018-05-12', error: false });
     expect(wrapper.instance().validate()).toBe(false);
   });
   describe('Form submit', () => {
     beforeEach(() => {
+      wrapper.instance().handleInputChange({ name: 'name', value: 'listname', error: false });
+      wrapper.instance().handleInputChange({ name: 'due_date', value: '2018-05-12', error: false });
       button.simulate('click', {
         preventDefault: () => {},
       });
