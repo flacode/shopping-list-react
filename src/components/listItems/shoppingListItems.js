@@ -58,25 +58,25 @@ class ItemDashBoard extends Component {
   }
 
   // function to make API call to add items to shopping list
-  handleCreateItem = (item) => {
-    Client.addItems(this.listId, item, this.serverError);
-    setTimeout(() => this.loadItemsFromServer(), 300);
+  handleCreateItem = async (item) => {
+    await Client.addItems(this.listId, item, this.serverError);
+    await this.loadItemsFromServer();
   }
 
   // function to make API call to delete items from the shopping list
-  handleDeleteItem = (itemId) => {
+  handleDeleteItem = async (itemId) => {
     const deleteItem = window.confirm('Are you sure you want to delete this item?');
     if (deleteItem) {
-      Client.deleteItems(this.listId, itemId, this.serverError);
-      setTimeout(() => this.loadItemsFromServer(), 300);
+      await Client.deleteItems(this.listId, itemId, this.serverError);
+      await this.loadItemsFromServer();
     }
     return false;
   }
 
   // function to make API call to update item in a shopping list
-  handleUpdateItem = (itemId, item) => {
-    Client.updateItems(this.listId, itemId, item, this.serverError);
-    setTimeout(() => this.loadItemsFromServer(), 300);
+  handleUpdateItem = async (itemId, item) => {
+    await Client.updateItems(this.listId, itemId, item, this.serverError);
+    await this.loadItemsFromServer();
   }
 
   render() {

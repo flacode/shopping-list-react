@@ -70,25 +70,25 @@ class ShoppingListDashboard extends Component {
     }
 
     // function to make API call to create new shopping list
-    handleCreateShoppingList = (shoppingList) => {
-      Client.createShoppingList(shoppingList, this.serverError);
-      setTimeout(() => this.loadShoppingListsFromServer(), 300);
+    handleCreateShoppingList = async (shoppingList) => {
+      await Client.createShoppingList(shoppingList, this.serverError);
+      await this.loadShoppingListsFromServer();
     }
 
     // function to make API call to delete shopping list
-    handleDeleteShoppingList = (shoppingListId) => {
+    handleDeleteShoppingList = async (shoppingListId) => {
       const deleteItem = window.confirm('Are you sure you want to delete this shopping list?');
       if (deleteItem) {
-        Client.deleteShoppingList(shoppingListId, this.serverError);
-        setTimeout(() => this.loadShoppingListsFromServer(), 300);
+        await Client.deleteShoppingList(shoppingListId, this.serverError);
+        await this.loadShoppingListsFromServer();
       }
       return false;
     }
 
     // function to make API call to update shopping list item
-    handleUpdateShoppingList = (shoppingListId, shoppingList) => {
-      Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
-      setTimeout(() => this.loadShoppingListsFromServer(), 300);
+    handleUpdateShoppingList = async (shoppingListId, shoppingList) => {
+      await Client.updateShoppingList(shoppingListId, shoppingList, this.serverError);
+      await this.loadShoppingListsFromServer();
     }
 
     pageChange = (page) => {
