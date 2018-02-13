@@ -38,7 +38,9 @@ Tools used for development of this client are;
 - Enter http://localhost:3000 in your browser to interact with your local version of your application.
 
 ## Running the tests
-
-To be added
+ - In the root repository, run
+ ```sh
+> npm test
+```
 
 
