@@ -73,13 +73,20 @@ describe('<ItemForm />', () => {
     });
     expect(wrapper.instance().validate()).toBe(true);
   });
-  it('`validate()` returns false without form errors', () => {
+  it('`validate()` returns true with missing required fields', () => {
     wrapper.instance().handleInputChange({ name: 'name', value: 'item1', error: false });
+    expect(wrapper.instance().validate()).toBe(true);
+  });
+  it('`validate()` returns false all fields', () => {
+    wrapper.instance().handleInputChange({ name: 'name', value: 'item1', error: false });
+    wrapper.instance().handleInputChange({ name: 'quantity', value: '1', error: false });
     expect(wrapper.instance().validate()).toBe(false);
   });
 
   describe('Form submit', () => {
     beforeEach(() => {
+      wrapper.instance().handleInputChange({ name: 'name', value: 'item1', error: false });
+      wrapper.instance().handleInputChange({ name: 'quantity', value: '1', error: false });
       button.simulate('click', {
         preventDefault: () => {},
       });

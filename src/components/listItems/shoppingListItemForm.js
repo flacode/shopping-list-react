@@ -45,27 +45,29 @@ class ItemForm extends Component {
 
     // check for any errors in the state
     validate = () => {
-      // const item = this.state.fields;
-      const fieldErrors = this.state.fieldErrors;
+      const { fields, fieldErrors } = this.state;
       const errMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
-      // if (!item.name) return true;
-      // if (!item.quantity) return true;
-      // if (!item.status) return true;
-      // if (!item.bought_from) return true;
+      if (!fields.name) return true;
+      if (!fields.quantity) return true;
       if (errMessages.length) return true;
       return false;
     }
 
     // handle form submit event
     handleFormSubmit = (event) => {
+      const {
+        name,
+        quantity,
+        status,
+        bought_from,
+      } = this.state.fields;
       event.preventDefault();
       if (this.validate()) return;
-
       this.props.handleFormSubmitted({
-        name: this.state.fields.name,
-        quantity: this.state.fields.quantity,
-        status: this.state.fields.status.toString(),
-        bought_from: this.state.fields.bought_from,
+        name,
+        quantity,
+        status,
+        bought_from,
       });
       this.setState(() => ({
         fields: {

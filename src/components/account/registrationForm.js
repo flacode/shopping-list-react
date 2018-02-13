@@ -101,12 +101,11 @@ class RegistrationForm extends Component {
 
       // function to validate the form for both field and form errors
       validate = () => {
-        const fieldErrors = this.state.fieldErrors;
-        const serverErrors = this.state.server;
+        const { fieldErrors, server } = this.state;
         const errorMessages = Object.keys(fieldErrors).filter(key => fieldErrors[key]);
         if (!this.state.fields.confirmPassword) return true;
         if (errorMessages.length > 0) return true;
-        if (serverErrors.error) return true;
+        if (server.error) return true;
         return false;
       }
 
