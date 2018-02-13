@@ -12,6 +12,7 @@ class ToggleableShoppingListForm extends Component {
       modal: false,
     };
 
+    // function to handle toggle for shopping list form
     toggle = () => {
       this.setState(prevState => ({
         modal: !prevState.modal,

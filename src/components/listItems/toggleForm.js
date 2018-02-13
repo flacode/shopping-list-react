@@ -12,12 +12,14 @@ class ToggleableItemForm extends Component {
       modal: false,
     };
 
+    // function to toggle modal view
     toggle = () => {
       this.setState(prevState => ({
         modal: !prevState.modal,
       }));
     }
 
+    // function to handle form submit
     handleFormSubmit = (item) => {
       this.props.handleForm(item);
     }

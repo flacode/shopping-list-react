@@ -33,6 +33,7 @@ class ItemForm extends Component {
       }));
     }
 
+    // handle input change and update the state for controlled components
     handleInputChange = ({ name, value, error }) => {
       const field = { [name]: value };
       const fieldError = { [name]: error };
@@ -42,6 +43,7 @@ class ItemForm extends Component {
       }));
     }
 
+    // check for any errors in the state
     validate = () => {
       // const item = this.state.fields;
       const fieldErrors = this.state.fieldErrors;
@@ -54,6 +56,7 @@ class ItemForm extends Component {
       return false;
     }
 
+    // handle form submit event
     handleFormSubmit = (event) => {
       event.preventDefault();
       if (this.validate()) return;
@@ -129,7 +132,6 @@ class ItemForm extends Component {
                     onChange={this.handleCheck}
                     checked={this.state.fields.status}
                   />
-                  { this.state.error && <div className="form-error">{this.state.error}</div>}
                 </div>
               </div>
             </ModalBody>
