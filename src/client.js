@@ -1,8 +1,8 @@
 import axios from 'axios/lib/axios';
 import { notify } from 'react-notify-toast';
 
-// const BASE_URL = 'https://deployment-shopping-list-api.herokuapp.com/api';
-const BASE_URL = 'http://127.0.0.1:5000/api';
+const BASE_URL = 'https://deployment-shopping-list-api.herokuapp.com/api';
+// const BASE_URL = 'http://127.0.0.1:5000/api';
 let url;
 
 const handleError = (error, errorMessage) => {
