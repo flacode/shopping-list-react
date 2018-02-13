@@ -5,7 +5,9 @@ import {
   Button,
   Breadcrumb,
   BreadcrumbItem,
+  Input,
 } from 'reactstrap';
+import Pagination from 'rc-pagination';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Notifications, { notify } from 'react-notify-toast';
@@ -21,6 +23,9 @@ class ItemDashBoard extends Component {
     this.state = {
       items: [],
       serverMessage: '',
+      currentPage: 1,
+      totalItems: 0,
+      searchKey: '',
       loading: false,
       listName: localStorage.getItem('listName'),
     };
@@ -41,20 +46,30 @@ class ItemDashBoard extends Component {
 
   // function to handle successful API calls
   serverData = (data) => {
-    if (data.message) this.setState(() => ({ serverMessage: data.message, items: [], loading: false }));
     if (data.Items) {
       this.setState(() => ({
         serverMessage: '',
         items: data.Items,
+        totalItems: data.total,
         loading: false,
       }));
+    }
+    if (data.message) {
+      this.setState(() =>
+        ({
+          currentPage: 1,
+          serverMessage: data.message,
+          items: [],
+          loading: false,
+        }));
+      this.pageChange(1);
     }
   }
 
   // function to make API call to load items from the server
   loadItemsFromServer = () => {
     this.setState(() => ({ loading: true }));
-    Client.getItems(this.listId, this.serverData, this.serverError);
+    Client.getItems(this.listId, this.serverData, this.serverError, 3, this.state.currentPage, this.state.searchKey);
   }
 
   // function to make API call to add items to shopping list
@@ -77,6 +92,28 @@ class ItemDashBoard extends Component {
   handleUpdateItem = async (itemId, item) => {
     await Client.updateItems(this.listId, itemId, item, this.serverError);
     await this.loadItemsFromServer();
+  }
+
+  pageChange = (page) => {
+    // use page directly to get the lists on that page
+    Client.getItems(this.listId, this.serverData, this.serverError, 3, page, this.state.searchKey);
+    this.setState(() => ({
+      currentPage: page,
+    }));
+  }
+
+  // function to handle change in user input for search functionality
+  handleChange = (event) => {
+    const { value } = event.target;
+    this.setState(() => ({
+      searchKey: value,
+    }));
+  }
+
+  // function to make API call to get shopping lists that match search key
+  handleSearch = (event) => {
+    event.preventDefault();
+    this.loadItemsFromServer();
   }
 
   render() {
@@ -112,6 +149,13 @@ class ItemDashBoard extends Component {
                 </BreadcrumbItem>
                 <BreadcrumbItem active tag="span">{this.state.listName}</BreadcrumbItem>
               </Breadcrumb>
+              <div className="row mt-2">
+                <div className="offset-sm-8">
+                  <form onSubmit={this.handleSearch}>
+                    <Input type="search" name="search" placeholder="Search" onChange={this.handleChange} />
+                  </form>
+                </div>
+              </div>
               { this.state.loading ?
                 <div className="list-group">
                   <li className="list-group-item">
@@ -130,10 +174,12 @@ class ItemDashBoard extends Component {
                   </li>
                 </div> :
                 <div className="list-group">
-                  { this.state.items.length <= 0 ?
+                  { this.state.serverMessage &&
                     <li className="list-group-item">
                       <p> {this.state.serverMessage} </p>
-                    </li> :
+                    </li>
+                  }
+                  {this.state.items.length > 0 &&
                     this.state.items.map(item => (
                       <li key={item.id} className="list-group-item">
                         <div className="float-left">
@@ -177,6 +223,19 @@ class ItemDashBoard extends Component {
                 </div>
               }
               <ToggleableItemForm handleForm={this.handleCreateItem} />
+              { this.state.items.length > 0 &&
+                <div className="row">
+                  <div className="offset-sm-9">
+                    <Pagination
+                      total={this.state.totalItems}
+                      pageSize={3}
+                      onChange={this.pageChange}
+                      current={this.state.currentPage}
+                      hideOnSinglePage
+                    />
+                  </div>
+                </div>
+                }
             </div>
             <div className="panel-footer site-background">@flacode</div>
           </div>

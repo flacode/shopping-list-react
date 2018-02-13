@@ -93,7 +93,7 @@ class ShoppingListDashboard extends Component {
 
     pageChange = (page) => {
       // use page directly to get the lists on that page
-      Client.getShoppingLists(this.serverData, this.serverError, 4, page);
+      Client.getShoppingLists(this.serverData, this.serverError, 4, page, this.state.searchKey);
       this.setState(() => ({
         currentPage: page,
       }));
@@ -224,6 +224,7 @@ class ShoppingListDashboard extends Component {
                   handleForm={this.handleCreateShoppingList}
                 />
                 <br />
+                { this.state.shoppingLists.length > 0 &&
                 <div className="row">
                   <div className="offset-sm-9">
                     <Pagination
@@ -235,6 +236,7 @@ class ShoppingListDashboard extends Component {
                     />
                   </div>
                 </div>
+                }
               </div>
               <div className="panel-footer site-background">@flacode</div>
             </div>

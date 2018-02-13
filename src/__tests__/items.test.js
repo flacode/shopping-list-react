@@ -55,6 +55,26 @@ describe('<ItemDashBoard/>', () => {
     wrapper.instance().handleUpdateItem(3, item);
     expect(updateCall.length).toBeGreaterThan(0);
   });
+  it('` handleChange()` updates state', () => {
+    const input = wrapper.find('Input').first();
+    input.simulate('change', {
+      target: { value: 'key' },
+    });
+    expect(wrapper.state().searchKey).toEqual('key');
+  });
+  it('`handleSearch()`, loads lists', () => {
+    const form = wrapper.find('form').first();
+    const input = wrapper.find('Input').first();
+    const getKey = Client.getItems.mock.calls;
+    const calls = getKey.length;
+    input.simulate('change', {
+      target: { value: 'key' },
+    });
+    form.simulate('submit', {
+      preventDefault: () => {},
+    });
+    expect(getKey.length).toBeGreaterThan(calls);
+  });
   it('`logout` makes API', () => {
     const logoutCall = Client.logoutUser.mock.calls;
     const button = wrapper.find('Button').first();
