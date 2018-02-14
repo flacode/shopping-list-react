@@ -9,7 +9,7 @@ const handleError = (error, errorMessage) => {
   // handle API generated errors
   if (error.response) {
     if (error.response.status === 401) {
-      localStorage.removeItem('token');
+      localStorage.clear();
     }
     errorMessage(error.response.data.message);
   } else {
@@ -136,7 +136,7 @@ const logoutUser = (errorMessage, historyConfig) => {
   };
   axios.post(url, '', config)
     .then((response) => {
-      localStorage.removeItem('token');
+      localStorage.clear();
       notify.show(response.data.message, 'success');
       historyConfig.push('/login');
     })
