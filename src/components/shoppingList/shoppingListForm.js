@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalFooter,
 } from 'reactstrap';
+import Notifications, { notify } from 'react-notify-toast';
 import Field from '../field';
 import '../../App.css';
 
@@ -34,8 +35,14 @@ class ShoppingListForm extends Component {
     validate = () => {
       const { fieldErrors, fields } = this.state;
       const errMessages = Object.keys(fieldErrors).filter(key => fieldErrors[key]);
-      if (!fields.name) return true;
-      if (!fields.due_date) return true;
+      if (!fields.name) {
+        notify.show('Shopping list name is required', 'error');
+        return true;
+      }
+      if (!fields.due_date) {
+        notify.show('Shopping list due date is required', 'error');
+        return true;
+      }
       if (errMessages.length > 0) return true;
       return false;
     }
@@ -66,6 +73,7 @@ class ShoppingListForm extends Component {
         <div>
           <Modal isOpen={this.props.openModal} toggle={this.props.handleToggle}>
             <ModalHeader className="modal-heading">{this.props.heading}</ModalHeader>
+            <Notifications options={{ zIndex: 5000 }} />
             <ModalBody>
               <Field
                 label="Shopping list name"
