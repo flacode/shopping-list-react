@@ -10,6 +10,7 @@ import {
   Label,
   Input,
 } from 'reactstrap';
+import Notifications, { notify } from 'react-notify-toast';
 import validator from 'validator';
 import '../../App.css';
 import Field from '../field';
@@ -47,8 +48,14 @@ class ItemForm extends Component {
     validate = () => {
       const { fields, fieldErrors } = this.state;
       const errMessages = Object.keys(fieldErrors).filter(k => fieldErrors[k]);
-      if (!fields.name) return true;
-      if (!fields.quantity) return true;
+      if (!fields.name) {
+        notify.show('Item name is required', 'error');
+        return true;
+      }
+      if (!fields.quantity) {
+        notify.show('Item quantity is required', 'error');
+        return true;
+      }
       if (errMessages.length) return true;
       return false;
     }
@@ -85,6 +92,7 @@ class ItemForm extends Component {
         <div>
           <Modal isOpen={this.props.openModal} toggle={this.props.handleToggle}>
             <ModalHeader className="modal-heading">{this.props.heading}</ModalHeader>
+            <Notifications options={{ zIndex: 5000 }} />
             <ModalBody>
               <Field
                 label="Name"
