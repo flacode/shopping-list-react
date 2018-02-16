@@ -1,0 +1,20 @@
+{
+    "extends": [ "eslint:recommended", "plugin:react/recommended", "airbnb" ],
+    "plugins": [ "react" ],
+    "env": {
+        "browser": true,
+        "jest": true,
+        "es6": true
+    },
+    "parser": "babel-eslint",
+        "rules": {
+            "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+            "jsx-a11y/anchor-is-valid": [ "error", {
+                "components": [ "Link" ],
+                "specialLink": [ "to" ]
+            }],
+            "max-len": [1, 120, 2, {"ignoreComments": true}],
+            "prefer-destructuring": ["error", {"object": false, "array": false}],
+            "function-paren-newline": "off"
+        }
+}

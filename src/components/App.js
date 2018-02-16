@@ -1,30 +1,24 @@
-import React, { Component } from 'react';
-import ShoppingListDashboard from './shoppingList';
-import ItemDashBoard from './shoppingListItems';
-import {Grid} from 'react-bootstrap';
-//import Login from './Login';
-//import NewShoppingList from './createShoppingList';
-import '../App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import ShoppingListDashboard from './shoppingList/shoppingList';
+import ItemDashBoard from './listItems/shoppingListItems';
+import RegistrationForm from './account/registrationForm';
+import LoginForm from './account/loginForm';
+import NotFound from './notFound';
 
-class App extends Component {
-  render() {
-    return (
-      <Grid>
-        <ShoppingListDashboard />
-        <h1> Sample shopping list items</h1>
-        <ItemDashBoard />
-        {/*<br/>
-        <br/>
-        <Login />
-        <br/>
-        <br/>
-        <NewShoppingList items={items} />
-        <ShoppingListTable shoppingLists={shoppingLists} />
-        <br/>
-        */}
-      </Grid>
-    );
-  }
-}
+const App = () => (
+  <div>
+    <Router>
+      <Switch>
+        <Route exact path="/" component={RegistrationForm} />
+        <Route path="/register" component={RegistrationForm} />
+        <Route path="/login" component={LoginForm} />
+        <Route path="/shoppinglist/:listId/items" component={ItemDashBoard} />
+        <Route path="/shoppinglists" component={ShoppingListDashboard} />
+        <Route path="*" component={NotFound} />
+      </Switch>
+    </Router>
+  </div>
+);
 
 export default App;
